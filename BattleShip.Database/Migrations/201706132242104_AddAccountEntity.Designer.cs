@@ -13,7 +13,7 @@ namespace BattleShip.Database.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201706132234585_AddAccountEntity"; }
+            get { return "201706132242104_AddAccountEntity"; }
         }
         
         string IMigrationMetadata.Source

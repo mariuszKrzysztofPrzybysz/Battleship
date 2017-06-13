@@ -11,7 +11,7 @@ namespace BattleShip.Database.Migrations
                 "dbo.Account",
                 c => new
                     {
-                        Id = c.Long(nullable: false, identity: true),
+                        AccountId = c.Long(nullable: false, identity: true),
                         Login = c.String(nullable: false, maxLength: 50),
                         Password = c.String(nullable: false),
                         EmailAddress = c.String(nullable: false),
@@ -20,7 +20,7 @@ namespace BattleShip.Database.Migrations
                         Photo = c.Binary(),
                         Gender = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.Id)
+                .PrimaryKey(t => t.AccountId)
                 .Index(t => t.Login, unique: true);
             
         }
