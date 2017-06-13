@@ -65,4 +65,34 @@ namespace BattleShip.Repository.ViewModels
         [Display(Name = "Allow private chat")]
         public string AllowPrivateChat { get; set; }
     }
+
+    public class PlayerEditViewModel
+    {
+        [Required]
+        public long PlayerIdId { get; set; }
+
+        [MaxLength(50)]
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+
+        [MaxLength(50)]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email address")]
+        public string EmailAddress { get; set; }
+
+        [Display(Name = "Photo")]
+        public byte[] Photo { get; set; }
+
+        [Required]
+        [Display(Name = "Allow new battle")]
+        public bool AllowNewBattle { get; set; }
+
+        [Required]
+        [Display(Name = "Allow private chat")]
+        public bool AllowPrivateChat { get; set; }
+    }
 }
