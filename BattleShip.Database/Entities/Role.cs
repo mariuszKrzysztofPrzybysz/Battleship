@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BattleShip.Database.Entities
@@ -14,6 +15,12 @@ namespace BattleShip.Database.Entities
         [Required]
         [StringLength(25)]
         public string Name { get; set; }
+
+        #endregion
+
+        #region Navigation properties
+
+        public virtual ICollection<AccountRole> AccountRoles { get; set; }
 
         #endregion
     }

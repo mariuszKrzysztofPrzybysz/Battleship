@@ -9,11 +9,21 @@ namespace BattleShip.Database.Entities
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public long AccountRoleId { get; set; }
 
-        public long PlayerId { get; set; }
+        public long AccountId { get; set; }
 
         public byte RoleId { get; set; }
+
+        #endregion
+
+        #region Navigation properties
+
+        [ForeignKey(nameof(AccountId))]
+        public virtual Account Account { get; set; }
+
+        [ForeignKey(nameof(RoleId))]
+        public virtual Role Role { get; set; }
 
         #endregion
     }
