@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleShip.Web", "BattleShi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleShip.Database", "BattleShip.Database\BattleShip.Database.csproj", "{4122FE85-ED0F-4F00-94A5-F22135962D8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleShip.Repository", "BattleShip.Repository\BattleShip.Repository.csproj", "{A1D41268-3AD3-4A67-B9B5-C20ED5F635FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4122FE85-ED0F-4F00-94A5-F22135962D8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4122FE85-ED0F-4F00-94A5-F22135962D8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4122FE85-ED0F-4F00-94A5-F22135962D8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1D41268-3AD3-4A67-B9B5-C20ED5F635FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1D41268-3AD3-4A67-B9B5-C20ED5F635FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1D41268-3AD3-4A67-B9B5-C20ED5F635FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1D41268-3AD3-4A67-B9B5-C20ED5F635FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
