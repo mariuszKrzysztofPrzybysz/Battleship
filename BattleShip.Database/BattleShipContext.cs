@@ -1,5 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Security.Cryptography.X509Certificates;
+using BattleShip.Database.Entities;
 
 namespace BattleShip.Database
 {
@@ -9,6 +11,8 @@ namespace BattleShip.Database
         {
             
         }
+
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
