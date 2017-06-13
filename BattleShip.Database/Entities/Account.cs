@@ -43,6 +43,12 @@ namespace BattleShip.Database.Entities
         [Required]
         public Gender Gender { get; set; }
 
+        [Required]
+        public  bool AllowNewBattle { get; set; }
+
+        [Required]
+        public bool AllowPrivateChat { get; set; }
+
         #endregion
 
         #region Navigation properties
