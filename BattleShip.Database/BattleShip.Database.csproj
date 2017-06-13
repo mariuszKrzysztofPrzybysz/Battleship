@@ -52,6 +52,7 @@
     <Compile Include="BattleShipContext.cs" />
     <Compile Include="Entities\Account.cs" />
     <Compile Include="Entities\AccountRole.cs" />
+    <Compile Include="Entities\Battle.cs" />
     <Compile Include="Entities\Role.cs" />
     <Compile Include="Migrations\201706132230313_AddRoleEntity.cs" />
     <Compile Include="Migrations\201706132230313_AddRoleEntity.Designer.cs">
@@ -60,6 +61,10 @@
     <Compile Include="Migrations\201706132242104_AddAccountEntity.cs" />
     <Compile Include="Migrations\201706132242104_AddAccountEntity.Designer.cs">
       <DependentUpon>201706132242104_AddAccountEntity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706132255205_AddBattleEntity.cs" />
+    <Compile Include="Migrations\201706132255205_AddBattleEntity.Designer.cs">
+      <DependentUpon>201706132255205_AddBattleEntity.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +79,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706132242104_AddAccountEntity.resx">
       <DependentUpon>201706132242104_AddAccountEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706132255205_AddBattleEntity.resx">
+      <DependentUpon>201706132255205_AddBattleEntity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
