@@ -1,0 +1,4 @@
+﻿namespace BattleShip.Repository.ViewModels
+{
+    
+}

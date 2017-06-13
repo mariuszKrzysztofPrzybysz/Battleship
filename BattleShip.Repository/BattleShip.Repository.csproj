@@ -53,6 +53,7 @@
     <Compile Include="Interfaces\IPlayerRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryHelpers\PasswordHelper.cs" />
+    <Compile Include="ViewModels\PlayerViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
