@@ -6,11 +6,11 @@ using BattleShip.Database.Entities;
 
 namespace BattleShip.Database
 {
-    public class BattleShipContext :DbContext
+    public class BattleShipContext : DbContext
     {
         public BattleShipContext() : base("name=BattleShipConnection")
         {
-            
+
         }
 
         public DbSet<Role> Roles { get; set; }
@@ -23,11 +23,18 @@ namespace BattleShip.Database
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder
                 .Conventions
                 .Remove<PluralizingTableNameConvention>();
+
+            modelBuilder
+                .Conventions
+                .Remove<ManyToManyCascadeDeleteConvention>();
+            modelBuilder
+                .Conventions
+                .Remove<OneToManyCascadeDeleteConvention>();
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

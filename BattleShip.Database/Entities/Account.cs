@@ -49,6 +49,8 @@ namespace BattleShip.Database.Entities
 
         public virtual ICollection<AccountRole> AccountRoles { get; set; }
 
+        public virtual ICollection<Battle> Battles { get; set; }
+
         #endregion
     }
 }

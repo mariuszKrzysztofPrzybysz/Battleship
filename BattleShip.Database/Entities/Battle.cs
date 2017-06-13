@@ -20,12 +20,22 @@ namespace BattleShip.Database.Entities
 
         [Required]
         [DataType(DataType.DateTime)]
-        public DateTime? StartUtcDateTime { get; set; }
+        public DateTime StartUtcDateTime { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime? EndUtcDateTime { get; set; }
 
         public long? WinnerId { get; set; }
+
+        #endregion
+
+        #region Navigation properties
+
+        [ForeignKey(nameof(PlayerId))]
+        public virtual Account Player { get; set; }
+
+        [ForeignKey(nameof(OpponentId))]
+        public virtual Account Opponent { get; set; }
 
         #endregion
     }
