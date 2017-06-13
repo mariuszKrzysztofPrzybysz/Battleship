@@ -16,6 +16,8 @@ namespace BattleShip.Database
 
         public DbSet<Account> Accounts { get; set; }
 
+        public DbSet<AccountRole> AccountRoles { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
