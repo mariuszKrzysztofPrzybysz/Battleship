@@ -16,7 +16,7 @@ namespace BattleShip.Database.Entities
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public long AccountId { get; set; }
 
         [Required]
         [Index(IsUnique = true)]
