@@ -4,7 +4,7 @@ using BattleShip.Database.Entities;
 
 namespace BattleShip.Repository.ViewModels
 {
-    public class AddPlayerViewModel
+    public class AddAccountViewModel
     {
         [Required]
         [Index(IsUnique = true)]
@@ -22,12 +22,15 @@ namespace BattleShip.Repository.ViewModels
         public string EmailAddress { get; set; }
 
         [MaxLength(50)]
+        [Display(Name = "First name")]
         public string FirstName { get; set; }
 
         [MaxLength(50)]
+        [Display(Name = "Last name")]
         public string LastName { get; set; }
 
         [Required]
+        [Display(Name = "Gender")]
         public Gender Gender { get; set; }
 
         [Required]
@@ -39,7 +42,7 @@ namespace BattleShip.Repository.ViewModels
         public bool AllowPrivateChat { get; set; }
     }
 
-    public class PlayerDetailsViewModel
+    public class AccountDetailsViewModel
     {
         [Display(Name = "Login")]
         public string Login { get; set; }
@@ -66,10 +69,10 @@ namespace BattleShip.Repository.ViewModels
         public string AllowPrivateChat { get; set; }
     }
 
-    public class PlayerEditViewModel
+    public class EditAccountViewModel
     {
         [Required]
-        public long PlayerIdId { get; set; }
+        public long AccountId { get; set; }
 
         [MaxLength(50)]
         [Display(Name = "First name")]
