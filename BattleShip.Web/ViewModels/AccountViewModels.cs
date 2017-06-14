@@ -3,7 +3,7 @@ using BattleShip.Repository.ViewModels;
 
 namespace BattleShip.Web.ViewModels
 {
-    public class RegisterAccountViewModel : AddAccountViewModel
+    public class SignUpAccountViewModel : AddAccountViewModel
     {
         [Required]
         [DataType(DataType.Password)]

@@ -20,9 +20,9 @@ namespace BattleShip.Web.Controllers
 
         // GET: Account
         [AllowAnonymous]
-        public ActionResult Register()
+        public ActionResult SignUp()
         {
-            var viewModel = new RegisterAccountViewModel();
+            var viewModel = new SignUpAccountViewModel();
 
             return View(viewModel);
         }
@@ -30,7 +30,7 @@ namespace BattleShip.Web.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterAccountViewModel viewModel)
+        public ActionResult SignUp(SignUpAccountViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -49,6 +49,7 @@ namespace BattleShip.Web.Controllers
             else
             {
                 //TODO: Poinformować o błędzie
+                //throw new NotImplementedException();
                 throw new NotImplementedException();
             }
         }
