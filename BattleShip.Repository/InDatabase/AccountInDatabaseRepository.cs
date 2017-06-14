@@ -19,6 +19,19 @@ namespace BattleShip.Repository.InDatabase
 
         public Result Add(AddAccountViewModel viewModel)
         {
+            var isExistsAccountInDatabase = _context.Accounts
+                .Any(a => a.Login.Equals(viewModel.Login, StringComparison.OrdinalIgnoreCase));
+
+            if (isExistsAccountInDatabase)
+                return new Result
+                {
+                    IsSuccess = false,
+                    ErrorMessage =
+                        $"Ta nazwa użytkownika jest już zajęta. " +
+                        $"Pamiętaj, że w nazwach użytkowników ignorujemy kropki " +
+                        $"i nie rozróżniamy wielkości liter. Chcesz podać inną nazwę?"
+                };
+
             var hashedPassword = PasswordHelper.GetSha512CngPasswordHash(viewModel.Password);
 
             var account = new Account
