@@ -139,6 +139,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\ControllerInstaller.cs" />
+    <Compile Include="Infrastructure\ServicesInstaller.cs" />
+    <Compile Include="Infrastructure\WindsorControllerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +203,16 @@
     <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BattleShip.Database\BattleShip.Database.csproj">
+      <Project>{4122FE85-ED0F-4F00-94A5-F22135962D8D}</Project>
+      <Name>BattleShip.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BattleShip.Repository\BattleShip.Repository.csproj">
+      <Project>{a1d41268-3ad3-4a67-b9b5-c20ed5f635fe}</Project>
+      <Name>BattleShip.Repository</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
