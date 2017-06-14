@@ -49,6 +49,9 @@ namespace BattleShip.Database.Entities
         [Required]
         public bool AllowPrivateChat { get; set; }
 
+        [Required]
+        public bool IsOnChatWebPage { get; set; }
+
         #endregion
 
         #region Navigation properties
