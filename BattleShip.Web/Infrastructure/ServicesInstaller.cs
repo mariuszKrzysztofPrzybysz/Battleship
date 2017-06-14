@@ -19,6 +19,11 @@ namespace BattleShip.Web.Infrastructure
                 .Register(Component
                     .For<IAccountRepository>()
                     .ImplementedBy<AccountInDatabaseRepository>());
+
+            container
+                .Register(Component
+                    .For<IAccountRoleRepository>()
+                    .ImplementedBy<AccountRoleInDatabaseRepository>());
         }
     }
 }

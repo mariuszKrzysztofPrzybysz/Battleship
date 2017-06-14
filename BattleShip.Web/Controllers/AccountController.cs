@@ -10,17 +10,19 @@ using BattleShip.Web.ViewModels;
 
 namespace BattleShip.Web.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly IAccountRepository _repository;
+        private readonly IAccountRoleRepository _accountRoleRepository;
 
-        public AccountController(IAccountRepository repository)
+        public AccountController(IAccountRepository repository, IAccountRoleRepository accountRoleRepository)
         {
             _repository = repository;
+            _accountRoleRepository = accountRoleRepository;
         }
 
         // GET: Account
-        [AllowAnonymous]
         public ActionResult SignUp()
         {
             var viewModel = new SignUpAccountViewModel();
@@ -28,7 +30,6 @@ namespace BattleShip.Web.Controllers
             return View(viewModel);
         }
 
-        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult SignUp(SignUpAccountViewModel viewModel)
@@ -51,11 +52,11 @@ namespace BattleShip.Web.Controllers
                 return View();
             }
 
-            FormsAuthentication.SetAuthCookie(viewModel.Login.ToLower(), true);
+            SetAuthCookieAndAddSession(viewModel.Login.ToLower(), true);
+
             return RedirectToAction("Index", "Home");
         }
 
-        [AllowAnonymous]
         public ActionResult SignIn()
         {
             var viewModel=new SignInAccountViewModel();
@@ -64,7 +65,6 @@ namespace BattleShip.Web.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult SignIn(SignInAccountViewModel viewModel)
         {
@@ -80,7 +80,7 @@ namespace BattleShip.Web.Controllers
                 return View();
             }
 
-            FormsAuthentication.SetAuthCookie(viewModel.Login.ToLower(), true);
+            SetAuthCookieAndAddSession(viewModel.Login.ToLower(), true);
             return RedirectToAction("Index", "Player");
         }
 
@@ -89,6 +89,15 @@ namespace BattleShip.Web.Controllers
             FormsAuthentication.SignOut();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        private void SetAuthCookieAndAddSession(string userName, bool createPersistentCookie)
+        {
+            FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
+
+            var rolesList = _accountRoleRepository.GetAccountRoles(userName);
+            
+            Session.Add("Roles", rolesList);
         }
     }
 }

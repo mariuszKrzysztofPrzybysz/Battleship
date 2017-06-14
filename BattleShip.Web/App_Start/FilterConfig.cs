@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using BattleShip.Web.Attributes;
 
 namespace BattleShip.Web
 {
@@ -9,7 +10,7 @@ namespace BattleShip.Web
         {
             filters.Add(new HandleErrorAttribute());
             
-            filters.Add(new AuthorizeAttribute());
+            filters.Add(new BattleShipAuthorizeAttribute());
         }
     }
 }
