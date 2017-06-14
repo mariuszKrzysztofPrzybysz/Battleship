@@ -201,6 +201,7 @@
     <Content Include="Views\Account\SignUp.cshtml" />
     <Content Include="Views\Shared\_Login.cshtml" />
     <Content Include="Views\Player\Index.cshtml" />
+    <Content Include="Views\Account\SignIn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
