@@ -68,5 +68,20 @@ namespace BattleShip.Repository.InDatabase
                 ErrorMessage = "Nie utworzono roli dla użytkownika"
             };
         }
+
+        public Result AuthenticateAccount(string login, string password)
+        {
+            var hashedPassword = PasswordHelper.GetSha512CngPasswordHash(password);
+
+            var account = _context.Accounts
+                .SingleOrDefault(p =>
+                    p.Login.Equals(login, StringComparison.OrdinalIgnoreCase)
+                    && p.Password == hashedPassword);
+
+            if (account == null)
+                return new Result {IsSuccess = false, ErrorMessage = "Wprowadzony adres e-mail lub hasło nie pasuje do żadnego konta" };
+
+            return new Result {IsSuccess = true};
+        }
     }
 }
