@@ -26,15 +26,15 @@ namespace BattleShip.Repository.InDatabase
         public byte GetRoleIdOrDefault(string name)
         {
             var result = _context.Roles
-                .SingleOrDefault(r => r.Name
-                    .Equals(name, StringComparison.OrdinalIgnoreCase));
+                .SingleOrDefault(r => r.Name.Equals(name,
+                    StringComparison.OrdinalIgnoreCase));
 
             if (result != null)
                 return result.RoleId;
 
             return _context.Roles
-                .Single(r => r.Name
-                    .Equals("Player", StringComparison.OrdinalIgnoreCase)).RoleId;
+                .Single(r => r.Name.Equals("Player",
+                    StringComparison.OrdinalIgnoreCase)).RoleId;
         }
     }
 }

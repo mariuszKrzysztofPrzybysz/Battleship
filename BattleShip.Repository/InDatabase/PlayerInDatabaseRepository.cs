@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BattleShip.Database;
 using BattleShip.Database.Entities;
 using BattleShip.Repository.Interfaces;
@@ -41,12 +42,15 @@ namespace BattleShip.Repository.InDatabase
                     IsSuccess = false,
                     ErrorMessage = "Nie utworzono konta użytkownika"
                 };
-            //TODO: Pobrać IdRole dla 'Player'
+
+            var playerRoleId = _context.Roles
+                .Single(r => r.Name.Equals("Player",
+                    StringComparison.OrdinalIgnoreCase)).RoleId;
 
             var accountRole = new AccountRole
             {
                 AccountId = accountId,
-                RoleId = 1 //TODO: = roleId
+                RoleId = playerRoleId
             };
 
             _context.AccountRoles.Add(accountRole);
