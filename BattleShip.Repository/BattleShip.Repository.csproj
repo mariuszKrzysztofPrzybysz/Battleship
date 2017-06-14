@@ -50,8 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InDatabase\AccountInDatabaseRepository.cs" />
+    <Compile Include="InDatabase\AccountRoleInDatabaseRepository.cs" />
     <Compile Include="InDatabase\RoleInDatabaseRepository.cs" />
     <Compile Include="Interfaces\IAccountRepository.cs" />
+    <Compile Include="Interfaces\IAccountRoleRepository.cs" />
     <Compile Include="Interfaces\IRoleRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryHelpers\PasswordHelper.cs" />
