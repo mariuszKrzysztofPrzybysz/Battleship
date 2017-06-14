@@ -11,9 +11,9 @@ namespace BattleShip.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IPlayerRepository _repository;
+        private readonly IAccountRepository _repository;
 
-        public AccountController(IPlayerRepository repository)
+        public AccountController(IAccountRepository repository)
         {
             _repository = repository;
         }
@@ -49,7 +49,7 @@ namespace BattleShip.Web.Controllers
             else
             {
                 //TODO: Poinformować o błędzie
-                return HttpNotFound();
+                throw new NotImplementedException();
             }
         }
     }

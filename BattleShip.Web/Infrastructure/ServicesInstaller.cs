@@ -17,8 +17,8 @@ namespace BattleShip.Web.Infrastructure
 
             container
                 .Register(Component
-                    .For<IPlayerRepository>()
-                    .ImplementedBy<PlayerInDatabaseRepository>());
+                    .For<IAccountRepository>()
+                    .ImplementedBy<AccountInDatabaseRepository>());
         }
     }
 }
