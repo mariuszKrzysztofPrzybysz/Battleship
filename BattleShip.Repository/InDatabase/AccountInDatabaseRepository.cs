@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BattleShip.Database;
 using BattleShip.Database.Entities;
@@ -95,6 +96,20 @@ namespace BattleShip.Repository.InDatabase
                 return new Result {IsSuccess = false, ErrorMessage = "Wprowadzony adres e-mail lub hasło nie pasuje do żadnego konta" };
 
             return new Result {IsSuccess = true};
+        }
+
+        public IEnumerable<OnChatWebPageViewModel> GetOnlinePlayersExcept(string login)
+        {
+            return _context.Accounts
+                .Where(a => a.IsOnChatWebPage == true
+                            && !a.Login.Equals(login, StringComparison.OrdinalIgnoreCase))
+                .Select(a => new OnChatWebPageViewModel
+                {
+                    Login = a.Login,
+                    AllowPrivateChat = a.AllowPrivateChat,
+                    AllowNewBattle = a.AllowNewBattle
+                })
+                .ToList();
         }
     }
 }

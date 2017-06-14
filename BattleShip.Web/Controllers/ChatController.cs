@@ -19,7 +19,9 @@ namespace BattleShip.Web.Controllers
         // GET: Chat
         public ActionResult Index()
         {
-            return View();
+            var viewModel = _repository.GetOnlinePlayersExcept(User.Identity.Name);
+
+            return View(viewModel);
         }
     }
 }

@@ -1,8 +1,111 @@
-﻿
+﻿@model IEnumerable<BattleShip.Repository.ViewModels.OnChatWebPageViewModel>
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    * {
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
 
-<h2>Chat</h2>
+    body {
+        margin: 0 auto; }
+    body .js-chat-container .well {
+        margin-bottom: 0; }
+    body .js-chat-container .well .panel-default {
+        margin-bottom: 0px !important; }
+    body .js-chat-container .well .panel-body {
+        overflow-y: auto; }
 
+/*# sourceMappingURL=players-container.css.map */
+</style>
+@section scripts
+{
+    <script>
+        $(function () {
+            const jsChatContainer = $('div.js-chat-container');
+            const navbarHeader = $('div.navbar-header');
+            const divPanel = $('div.panel');
+            const divPanelHeading = $('div.panel-heading');
+            const divPanelBody = $('div.panel-body');
+            const hr = $('hr');
+            const footer = $('footer');
+
+            jsChatContainer.height($(window).height() - navbarHeader.outerHeight()-hr.outerHeight()-footer.outerHeight());
+
+            divPanel.outerHeight(jsChatContainer.height() - divPanelHeading.outerHeight());
+
+            divPanelBody.innerHeight(divPanel.innerHeight() - divPanelHeading.outerHeight());
+        });
+    </script>
+}
+<div class="js-chat-container">
+    <div class="row">
+        <div class="col-xs-5" style="padding-right: 0px;">
+            <div class="well well-lg">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search-input" placeholder="Szukaj">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" id="search-button" type="submit">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group" id="players-container">
+                            @foreach (var player in Model)
+                            {
+
+                                <li class="list-group-item player" data-player="@{@player.Login;}">
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <img src="~/Content/Images/Photos/@{@player.Login;}.jpg" class="img-rounded" alt="@{@player.Login;}" width="50" height="50">
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="media-heading">@{@player.Login;}</h4>
+                                            @{
+                                                var privateChat = player.AllowPrivateChat == true ? "active" : "disabled";
+                                                var newBattle = player.AllowNewBattle == true ? "active" : "disabled";
+                                            }
+                                            <button type="button" class="btn btn-info btn-xs @privateChat" data-event="privateChat">Private chat</button>
+                                            <button type="button" class="btn btn-danger btn-xs @newBattle" data-event="newBattle">New battle</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                            @*<li class="list-group-item player" data-player="@{@player.Login;}" data-connection-id="c4408700-20df-4ae1-87aa-d0d707cbf212">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img src="~/Content/Images/Photos/@{@player.Login;}.jpg" class="img-rounded" alt="@{@player.Login;}" width="50" height="50">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="media-heading">ifajka</h4>
+                                        <button type="button" class="btn btn-info btn-xs active" data-event="privateChat">Private chat</button>
+                                        <button type="button" class="btn btn-danger btn-xs active" data-event="newBattle">New battle</button>
+                                    </div>
+                                </div>
+                            </li>*@
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-7" style="padding-left: 0px;">
+            <div class="well well-lg">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                    </div>
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

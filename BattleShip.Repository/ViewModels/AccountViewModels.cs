@@ -98,4 +98,13 @@ namespace BattleShip.Repository.ViewModels
         [Display(Name = "Allow private chat")]
         public bool AllowPrivateChat { get; set; }
     }
+
+    public class OnChatWebPageViewModel
+    {
+        public string Login { get; set; }
+
+        public bool AllowNewBattle { get; set; }
+
+        public bool AllowPrivateChat { get; set; }
+    }
 }
