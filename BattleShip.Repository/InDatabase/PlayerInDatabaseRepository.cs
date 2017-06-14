@@ -25,8 +25,8 @@ namespace BattleShip.Repository.InDatabase
                 Login = viewModel.Login,
                 Password = hashedPassword,
                 EmailAddress = viewModel.EmailAddress,
-                FirstName = viewModel.FirstName,
-                LastName = viewModel.LastName,
+                FirstName = viewModel.FirstName ?? string.Empty,
+                LastName = viewModel.LastName ?? string.Empty,
                 Gender = viewModel.Gender,
                 AllowNewBattle = viewModel.AllowNewBattle,
                 AllowPrivateChat = viewModel.AllowPrivateChat
