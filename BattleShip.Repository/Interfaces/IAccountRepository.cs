@@ -4,7 +4,7 @@ using BattleShip.Repository.ViewModels;
 
 namespace BattleShip.Repository.Interfaces
 {
-    public interface IPlayerRepository
+    public interface IAccountRepository
     {
         Result Add(AddAccountViewModel viewModel);
     }

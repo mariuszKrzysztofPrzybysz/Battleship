@@ -8,11 +8,11 @@ using BattleShip.Repository.ViewModels;
 
 namespace BattleShip.Repository.InDatabase
 {
-    public class PlayerInDatabaseRepository : IPlayerRepository
+    public class AccountInDatabaseRepository : IAccountRepository
     {
         private readonly BattleShipContext _context;
 
-        public PlayerInDatabaseRepository(BattleShipContext context)
+        public AccountInDatabaseRepository(BattleShipContext context)
         {
             _context = context;
         }
@@ -34,7 +34,8 @@ namespace BattleShip.Repository.InDatabase
             };
 
             _context.Accounts.Add(account);
-            var accountId = _context.SaveChanges();
+            _context.SaveChanges();
+            var accountId = account.AccountId;
 
             if (accountId <= 0)
                 return new Result
@@ -43,6 +44,7 @@ namespace BattleShip.Repository.InDatabase
                     ErrorMessage = "Nie utworzono konta użytkownika"
                 };
 
+            //TODO: Replace magic string with ...
             var playerRoleId = _context.Roles
                 .Single(r => r.Name.Equals("Player",
                     StringComparison.OrdinalIgnoreCase)).RoleId;
@@ -54,7 +56,8 @@ namespace BattleShip.Repository.InDatabase
             };
 
             _context.AccountRoles.Add(accountRole);
-            var accountRoleId = _context.SaveChanges();
+            _context.SaveChanges();
+            var accountRoleId = accountRole.AccountRoleId;
 
             if (accountRoleId > 0)
                 return new Result {IsSuccess = true};
