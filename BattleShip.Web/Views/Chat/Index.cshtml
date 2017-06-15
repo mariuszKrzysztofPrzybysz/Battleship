@@ -11,15 +11,27 @@
     }
 
     body {
-        margin: 0 auto; }
-    body .js-chat-container .well {
-        margin-bottom: 0; }
-    body .js-chat-container .well .panel-default {
-        margin-bottom: 0px !important; }
-    body .js-chat-container .well .panel-body {
-        overflow-y: auto; }
+        margin: 0 auto;
+    }
 
-/*# sourceMappingURL=players-container.css.map */
+        body .js-chat-container .well {
+            margin-bottom: 0;
+        }
+
+            body .js-chat-container .well .panel-default {
+                margin-bottom: 0px !important;
+            }
+
+            body .js-chat-container .well .panel-body {
+                overflow-y: auto;
+            }
+
+    .nopadding {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /*# sourceMappingURL=Photos-container.css.map */
 </style>
 @section scripts
 {
@@ -33,7 +45,7 @@
             const hr = $('hr');
             const footer = $('footer');
 
-            jsChatContainer.height($(window).height() - navbarHeader.outerHeight()-hr.outerHeight()-footer.outerHeight());
+            jsChatContainer.height($(window).height() - navbarHeader.outerHeight() - hr.outerHeight() - footer.outerHeight());
 
             divPanel.outerHeight(jsChatContainer.height() - divPanelHeading.outerHeight());
 
@@ -41,68 +53,436 @@
         });
     </script>
 }
-<div class="js-chat-container">
+<div class="js-chat-container container-fluid">
     <div class="row">
-        <div class="col-xs-5" style="padding-right: 0px;">
-            <div class="well well-lg">
+        <div class="col-xs-12 col-sm-5 nopadding">
+            <div class="well well-sm">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="search-input" placeholder="Szukaj">
+                            <input type="text" class="form-control" id="search-input" placeholder="Szukaj...">
                             <div class="input-group-btn">
-                                <button class="btn btn-default" id="search-button" type="submit">
+                                <button class="btn btn-default" id="search-button" type="button">
                                     <i class="glyphicon glyphicon-search"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <ul class="list-group" id="players-container">
+                        <ul class="list-group" id="Photos-container">
                             @foreach (var player in Model)
                             {
-
-                                <li class="list-group-item player" data-player="@{@player.Login;}">
-                                    <div class="media">
-                                        <div class="media-left">
-                                            <img src="~/Content/Images/Photos/@{@player.Login;}.jpg" class="img-rounded" alt="@{@player.Login;}" width="50" height="50">
-                                        </div>
-                                        <div class="media-body">
-                                            <h4 class="media-heading">@{@player.Login;}</h4>
-                                            @{
-                                                var privateChat = player.AllowPrivateChat == true ? "active" : "disabled";
-                                                var newBattle = player.AllowNewBattle == true ? "active" : "disabled";
-                                            }
-                                            <button type="button" class="btn btn-info btn-xs @privateChat" data-event="privateChat">Private chat</button>
-                                            <button type="button" class="btn btn-danger btn-xs @newBattle" data-event="newBattle">New battle</button>
-                                        </div>
-                                    </div>
-                                </li>
-                            }
-                            @*<li class="list-group-item player" data-player="@{@player.Login;}" data-connection-id="c4408700-20df-4ae1-87aa-d0d707cbf212">
+                            <li class="list-group-item" data-player-name="@{@player.Login;}">
                                 <div class="media">
                                     <div class="media-left">
                                         <img src="~/Content/Images/Photos/@{@player.Login;}.jpg" class="img-rounded" alt="@{@player.Login;}" width="50" height="50">
                                     </div>
                                     <div class="media-body">
-                                        <h4 class="media-heading">ifajka</h4>
-                                        <button type="button" class="btn btn-info btn-xs active" data-event="privateChat">Private chat</button>
-                                        <button type="button" class="btn btn-danger btn-xs active" data-event="newBattle">New battle</button>
+                                        <h4 class="media-heading">@{@player.Login;}</h4>
+                                        @{
+                                                var privateChat = player.AllowPrivateChat == true ? "active" : "disabled";
+                                                var battle = player.AllowNewBattle == true ? "active" : "disabled";
+                                        }
+                                        <button type="button" class="btn btn-info btn-xs @privateChat" data-event="private-chat">Private chat</button>
+                                        <button type="button" class="btn btn-danger btn-xs @battle" data-event="battle">New battle</button>
                                     </div>
                                 </div>
-                            </li>*@
+                            </li>
+                            }
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xs-7" style="padding-left: 0px;">
-            <div class="well well-lg">
+        <div class="col-xs-12 col-sm-7 nopadding">
+            <div class="well well-sm">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="message-input" placeholder="Napisz wiadomość...">
+                        </div>
                     </div>
-                    <div class="panel-body">
 
+                    <div class="panel-body">
+                        <div id="tabs-container" class="tab-content">
+                            <ul class="nav nav-tabs">
+                                <li data-player-name="chat" class="active"><a href="#chat" data-toggle="tab">chat</a></li>
+                                <li data-player-name="iszczerba" class=""><a href="#iszczerba" data-toggle="tab"><span class="badge"></span>&nbsp;iszczerba&nbsp;<span class="close" aria-hidden="true">&times;</span></a></li>
+                                <li data-player-name="jkowalski" class=""><a href="#jkowalski" data-toggle="tab"><span class="badge">99</span>&nbsp;&nbsp;jkowalski&nbsp;<span class="close" aria-hidden="true">&times;</span></a></li>
+                            </ul>
+                            <div class="tab-pane fade active in" id="chat" style="overflow-y: auto;">
+                                <ul class="list-group js-messages-container">
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/ifajka.jpg" class="img-rounded" alt="ifajka" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/iszczerba.jpg" class="img-rounded" alt="iszczerba" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/izloty.jpg" class="img-rounded" alt="izloty" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane fade" id="iszczerba">
+                                <ul class="list-group js-messages-container" style="overflow-y: auto;">
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/iszczerba.jpg" class="img-rounded" alt="iszczerba" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/iszczerba.jpg" class="img-rounded" alt="iszczerba" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/iszczerba.jpg" class="img-rounded" alt="iszczerba" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/iszczerba.jpg" class="img-rounded" alt="iszczerba" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/iszczerba.jpg" class="img-rounded" alt="iszczerba" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/iszczerba.jpg" class="img-rounded" alt="iszczerba" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-pane fade" id="jkowalski">
+                                <ul class="list-group js-messages-container" style="overflow-y: auto;">
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/jkowalski.jpg" class="img-rounded" alt="jkowalski" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/jkowalski.jpg" class="img-rounded" alt="jkowalski" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="media">
+                                            <div class="well well-sm">
+                                                <div class="media-left">
+                                                    <img src="~/Content/Images/Photos/mprzybysz.jpg" class="img-rounded" alt="mprzybysz" width="75" height="75">
+                                                </div>
+                                                <div class="media-body">
+                                                    <h3 class="media-heading">
+                                                        &nbsp;<small>&nbsp;<i>&nbsp;Opublikowano&nbsp;2012-15-12 12:22</i></small>
+                                                    </h3>
+                                                    <p>message</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
