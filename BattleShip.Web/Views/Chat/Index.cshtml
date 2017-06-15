@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<BattleShip.Repository.ViewModels.OnChatWebPageViewModel>
 
+<script src="~/Scripts/jquery.signalR-2.2.2.js"></script>
+<script src="~/signalr/hubs"></script>
+<script src="~/Scripts/bootbox.js"></script>
+<script src="~/Scripts/chat.js"></script>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -14,29 +18,30 @@
         margin: 0 auto;
     }
 
-        body .js-chat-container .well {
-            margin-bottom: 0;
-        }
+    body .js-chat-container .well {
+        margin-bottom: 0;
+    }
 
-            body .js-chat-container .well .panel-default {
-                margin-bottom: 0px !important;
-            }
+    body .js-chat-container .well .panel-default {
+        margin-bottom: 0px !important;
+    }
 
-            body .js-chat-container .well .panel-body {
-                overflow-y: auto;
-            }
+    body .js-chat-container .well .panel-body {
+        overflow-y: auto;
+    }
 
     .nopadding {
         padding: 0 !important;
         margin: 0 !important;
     }
 
-    /*# sourceMappingURL=Photos-container.css.map */
+/*# sourceMappingURL=Photos-container.css.map */
 </style>
 @section scripts
 {
+
     <script>
-        $(function () {
+        $(function() {
             const jsChatContainer = $('div.js-chat-container');
             const navbarHeader = $('div.navbar-header');
             const divPanel = $('div.panel');
@@ -45,7 +50,10 @@
             const hr = $('hr');
             const footer = $('footer');
 
-            jsChatContainer.height($(window).height() - navbarHeader.outerHeight() - hr.outerHeight() - footer.outerHeight());
+            jsChatContainer.height($(window).height() -
+                navbarHeader.outerHeight() -
+                hr.outerHeight() -
+                footer.outerHeight());
 
             divPanel.outerHeight(jsChatContainer.height() - divPanelHeading.outerHeight());
 
