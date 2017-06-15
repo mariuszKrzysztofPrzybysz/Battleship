@@ -1,6 +1,7 @@
 ﻿$(function () {
     const messageInput = $('input#message-input');
     const chatMessageContainer = $('ul.js-chat-messages-container');
+    const privateChat = $('button[data-event="private-chat"]');
 
     var chatHubProxy = $.connection.chatHub;
 
@@ -8,7 +9,22 @@
         chatMessageContainer.prepend(addNewMessage(sender, message));
     };
 
-    $.connection.hub.start().done(function() {
+    chatHubProxy.client.answerToInviteToPrivateChat = function (sender) {
+        console.log(sender);
+    };
+
+    $.connection.hub.start().done(function () {
+        privateChat.each(function () {
+            if ($(this).hasClass('active')) {
+                //TODO: click vs on('click', ...
+                $(this).on('click', function () {
+                    let addresseePlayerName = $(this).closest('li').data('player-name');
+
+                    chatHubProxy.server.inviteToPrivateChat(addresseePlayerName);
+                });
+            }
+        });
+
         messageInput.keyup(function (event) {
             if (event.key === "Enter") {
                 let addresee = $('ul.nav-tabs').find('li.active');

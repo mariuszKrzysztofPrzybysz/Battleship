@@ -16,6 +16,14 @@ namespace BattleShip.Web.Hubs
             Clients.All.receivePublicMessage(sender, message);
         }
 
+        public void InviteToPrivateChat(string addresseePlayerName)
+        {
+                var sender = Context.User.Identity.Name;
+
+                Clients.Group(addresseePlayerName)
+                    .answerToInviteToPrivateChat(sender);
+        }
+
         public override Task OnConnected()
         {
             JoinGroup();
