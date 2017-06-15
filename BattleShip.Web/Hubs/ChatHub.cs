@@ -15,5 +15,29 @@ namespace BattleShip.Web.Hubs
 
             Clients.All.receivePublicMessage(sender, message);
         }
+
+        public override Task OnConnected()
+        {
+            JoinGroup();
+
+            return base.OnConnected();
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            LeaveGroup();
+
+            return base.OnDisconnected(stopCalled);
+        }
+
+        private void JoinGroup()
+        {
+            Groups.Add(Context.ConnectionId, Context.User.Identity.Name);
+        }
+
+        private void LeaveGroup()
+        {
+            Groups.Remove(Context.ConnectionId, Context.User.Identity.Name);
+        }
     }
 }
