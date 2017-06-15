@@ -1,7 +1,6 @@
-﻿$(function() {
-    const chatMessageContainer = $('ul.js-chat-messages-container');
+﻿$(function () {
     const messageInput = $('input#message-input');
-
+    const chatMessageContainer = $('ul.js-chat-messages-container');
 
     var chatHubProxy = $.connection.chatHub;
 
@@ -10,23 +9,21 @@
     };
 
     $.connection.hub.start().done(function() {
-        messageInput.keyup(function(event) {
+        messageInput.keyup(function (event) {
             if (event.key === "Enter") {
                 let addresee = $('ul.nav-tabs').find('li.active');
 
                 let addreseePlayerName = addresee.data('player-name');
 
-                if (typeof addreseePlayerName === "undefined" || addreseePlayerName === "chat") {
+                if (typeof addreseePlayerName === "undefined") {
                     chatHubProxy.server.sendPublicMessage(messageInput.val());
                 } else {
-                    //$('div.tab-content div.active ul.messages-list').prepend(newMessage($('#caller-login').val(), $('#messageInput').val()));
-
-                    //chatHubProxy.server.sendPrivateMessage(addreseeConnectionnId, $('#messageInput').val());
+                    
                 }
 
                 messageInput.val("");
             }
-            if (event.key === "Esc") {
+            if (event.key === "Escape") {
                 messageInput.val("");
             }
         });
