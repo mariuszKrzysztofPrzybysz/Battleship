@@ -47,26 +47,16 @@ namespace BattleShip.Web.Hubs
 
         public override Task OnConnected()
         {
-            JoinGroup();
+            Groups.Add(Context.ConnectionId, Context.User.Identity.Name);
 
             return base.OnConnected();
         }
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            LeaveGroup();
+            Groups.Remove(Context.ConnectionId, Context.User.Identity.Name);
 
             return base.OnDisconnected(stopCalled);
-        }
-
-        private void JoinGroup()
-        {
-            Groups.Add(Context.ConnectionId, Context.User.Identity.Name);
-        }
-
-        private void LeaveGroup()
-        {
-            Groups.Remove(Context.ConnectionId, Context.User.Identity.Name);
         }
     }
 }
