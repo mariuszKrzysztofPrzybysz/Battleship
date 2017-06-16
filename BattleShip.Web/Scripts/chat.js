@@ -68,6 +68,12 @@
                 $(this).on('click', function () {
                     let addresseePlayerName = $(this).closest('li').data('player-name');
 
+                    bootbox.dialog({
+                        title: 'Prywatny chat',
+                        message: '<p class="text-center">Wysłano zaproszenie do ' + addresseePlayerName + '.</p>',
+                        onEscape: true
+                    });
+
                     chatHubProxy.server.inviteToPrivateChat(addresseePlayerName);
                 });
             }
