@@ -170,6 +170,7 @@
     </Compile>
     <Compile Include="Helpers\ErrorHelper.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
+    <Compile Include="Infrastructure\ContainerManager.cs" />
     <Compile Include="Infrastructure\ControllerInstaller.cs" />
     <Compile Include="Infrastructure\ServicesInstaller.cs" />
     <Compile Include="Infrastructure\WindsorControllerFactory.cs" />

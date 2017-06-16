@@ -9,13 +9,9 @@ namespace BattleShip.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
-        private static IWindsorContainer _container;
-
         private static void BoostratpContainer()
         {
-            _container = new WindsorContainer().Install(FromAssembly.This());
-
-            var controllerFactory = new WindsorControllerFactory(_container.Kernel);
+            var controllerFactory = new WindsorControllerFactory(ContainerManager.Container.Kernel);
 
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);
         }
@@ -32,7 +28,7 @@ namespace BattleShip.Web
 
         protected void Application_End()
         {
-            _container.Dispose();
+
         }
     }
 }
