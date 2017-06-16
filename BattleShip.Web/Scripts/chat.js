@@ -1,7 +1,9 @@
 ﻿$(function () {
     const messageInput = $('input#message-input');
-    const chatMessageContainer = $('ul.js-chat-messages-container');
+    const chatMessageContainer = $('ul#js-chat-messages-container');
     const privateChat = $('button[data-event="private-chat"]');
+    const navTabs = $('ul#js-nav-tabs');
+    const tabPaneContainer = $('div#js-tab-pane-container');
 
     var chatHubProxy = $.connection.chatHub;
 
@@ -9,8 +11,54 @@
         chatMessageContainer.prepend(addNewMessage(sender, message));
     };
 
-    chatHubProxy.client.answerToInviteToPrivateChat = function (sender) {
-        console.log(sender);
+    chatHubProxy.client.receivePrivateMessage = function(privateChatGroupName, sender, message) {
+        let messagesContainer = $(`ul[data-private-chat-group-name="` + privateChatGroupName + `"]`);
+
+        messagesContainer.prepend(addNewMessage(sender, message));
+    };
+
+    chatHubProxy.client.receiveInvitationToPrivateChat = function (sender, privateChatGroupName) {
+        bootbox.confirm({
+            title: `Zaproszenie do prywatnego czatu`,
+            message:
+                `Użytkownik ` + sender + ` zaprasza na prywatny czat. Czy się zgadzasz?`,
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Nie'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Tak'
+                }
+            },
+            callback: function(result) {
+                if (result === true) {
+                    chatHubProxy.server.openNewTab(sender, privateChatGroupName);
+                } else {
+                    
+                }
+            }
+        });
+    };
+
+    chatHubProxy.client.openNewTab = function (playerName, privateChatGroupName) {
+        navTabs.append(`<li data-player-name="` +
+            playerName +
+            `" data-private-chat-group-name=` +
+            privateChatGroupName +
+            ` class=""><a href="#` +
+            playerName +
+            `" data-toggle="tab"><span class="badge"></span>&nbsp;` +
+            playerName +
+            `&nbsp;<span class="close" aria-hidden="true">&times;</span></a></li>`);
+
+        tabPaneContainer.append(`<div class="tab-pane fade" id="` +
+            playerName +
+            `" style="overflow-y: auto;"><ul class = "list-group" id="js-` +
+            playerName +
+            `-messages-container" data-private-chat-group-name="` +
+            privateChatGroupName +
+            `"></ul>
+                                </div>`);
     };
 
     $.connection.hub.start().done(function () {
@@ -27,14 +75,17 @@
 
         messageInput.keyup(function (event) {
             if (event.key === "Enter") {
+                let encodedMessage = htmlEncode(messageInput.val());
+
                 let addresee = $('ul.nav-tabs').find('li.active');
 
                 let addreseePlayerName = addresee.data('player-name');
 
                 if (typeof addreseePlayerName === "undefined") {
-                    chatHubProxy.server.sendPublicMessage(messageInput.val());
+                    chatHubProxy.server.sendPublicMessage(encodedMessage);
                 } else {
-                    
+                    let privateChatGroupName = addresee.data('private-chat-group-name');
+                    chatHubProxy.server.sendPrivateMessage(privateChatGroupName, encodedMessage);
                 }
 
                 messageInput.val("");
