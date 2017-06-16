@@ -99,7 +99,7 @@ namespace BattleShip.Repository.ViewModels
         public bool AllowPrivateChat { get; set; }
     }
 
-    public class OnChatWebPageViewModel
+    public class AccountPermissionsViewModel
     {
         public string Login { get; set; }
 

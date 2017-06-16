@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BattleShip.Repository.ViewModels.OnChatWebPageViewModel>
+﻿@model IEnumerable<BattleShip.Repository.ViewModels.AccountPermissionsViewModel>
 
 <script src="~/Scripts/jquery.signalR-2.2.2.js"></script>
 <script src="~/signalr/hubs"></script>
@@ -77,7 +77,7 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <ul class="list-group" id="Photos-container">
+                        <ul class="list-group" id="player-list-container">
                             @foreach (var player in Model)
                             {
                                 <li class="list-group-item" data-player-name="@{@player.Login;}">
