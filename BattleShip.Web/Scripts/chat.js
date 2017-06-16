@@ -4,8 +4,25 @@
     const privateChat = $('button[data-event="private-chat"]');
     const navTabs = $('ul#js-nav-tabs');
     const tabPaneContainer = $('div#js-tab-pane-container');
+    const playerList = $('ul#player-list-container');
 
     var chatHubProxy = $.connection.chatHub;
+
+    chatHubProxy.client.addOrUpdatePlayerPermissions = function (sender, allowPrivateChat, allowNewBatle) {
+        var playerOnTheList = playerList.find(`li[data-player-name="` + sender + `"]`);
+        
+        if (playerOnTheList.length ===0) {
+            //TODO: Dodać nowozalogowanego użytkownika do listy
+        } else {
+            console.log(playerOnTheList.length);
+            playerOnTheList.find(`button[data-event="private-chat"]`)
+                .removeClass('active').removeClass('disabled')
+                .addClass(allowPrivateChat === true ? "active" : "disabled");
+            playerOnTheList.find(`button[data-event="battle"]`)
+                .removeClass('active').removeClass('disabled')
+                .addClass(allowNewBatle === true ? "active" : "disabled");
+        }
+    };
 
     chatHubProxy.client.receivePublicMessage = function(sender, message) {
         chatMessageContainer.prepend(addNewMessage(sender, message));
@@ -87,7 +104,7 @@
 
                 let encodedAddreseePlayerName = htmlEncode(addresee.data('player-name'));
 
-                if (typeof encodedAddreseePlayerName === "undefined") {
+                if (typeof encodedAddreseePlayerName === "undefined" || encodedAddreseePlayerName==="") {
                     chatHubProxy.server.sendPublicMessage(encodedMessage);
                 } else {
                     let encodedPrivateChatGroupName = htmlEncode(addresee.data('private-chat-group-name'));
