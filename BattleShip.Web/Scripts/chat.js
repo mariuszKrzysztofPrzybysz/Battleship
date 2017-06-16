@@ -85,13 +85,13 @@
 
                 let addresee = $('ul.nav-tabs').find('li.active');
 
-                let addreseePlayerName = addresee.data('player-name');
+                let encodedAddreseePlayerName = htmlEncode(addresee.data('player-name'));
 
-                if (typeof addreseePlayerName === "undefined") {
+                if (typeof encodedAddreseePlayerName === "undefined") {
                     chatHubProxy.server.sendPublicMessage(encodedMessage);
                 } else {
-                    let privateChatGroupName = addresee.data('private-chat-group-name');
-                    chatHubProxy.server.sendPrivateMessage(privateChatGroupName, encodedMessage);
+                    let encodedPrivateChatGroupName = htmlEncode(addresee.data('private-chat-group-name'));
+                    chatHubProxy.server.sendPrivateMessage(encodedPrivateChatGroupName, encodedMessage);
                 }
 
                 messageInput.val("");
