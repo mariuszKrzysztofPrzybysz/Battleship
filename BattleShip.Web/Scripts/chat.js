@@ -8,19 +8,36 @@
 
     var chatHubProxy = $.connection.chatHub;
 
-    chatHubProxy.client.addOrUpdatePlayerPermissions = function (sender, allowPrivateChat, allowNewBatle) {
+    chatHubProxy.client.addOrUpdatePlayerPermissions = function (sender, allowPrivateChat, allowBattle) {
         var playerOnTheList = playerList.find(`li[data-player-name="` + sender + `"]`);
-        
+
+        let allowPrivateChatClass = allowPrivateChat === true ? "active" : "disabled";
+        let allowBattleClass = allowBattle === true ? "active" : "disabled";
+
         if (playerOnTheList.length ===0) {
             //TODO: Dodać nowozalogowanego użytkownika do listy
+            var newPlayer = `<li class="list-group-item" data-player-name="`+sender+`">
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <img src="/Content/Images/Photos/`+sender+`.jpg" class="img-rounded" alt="`+sender+`" width="50" height="50">
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="media-heading">`+sender+`</h4>
+                                            <button type="button" class="btn btn-info btn-xs `+allowPrivateChatClass+`" data-event="private-chat">Private chat</button>
+                                            <button type="button" class = "btn btn-danger btn-xs `+allowBattleClass+`" data-event="battle">New battle</button>
+                                        </div>
+                                    </div>
+                                </li>`;
+
+            playerList.prepend(newPlayer);
         } else {
             console.log(playerOnTheList.length);
             playerOnTheList.find(`button[data-event="private-chat"]`)
                 .removeClass('active').removeClass('disabled')
-                .addClass(allowPrivateChat === true ? "active" : "disabled");
+                .addClass(allowPrivateChatClass);
             playerOnTheList.find(`button[data-event="battle"]`)
                 .removeClass('active').removeClass('disabled')
-                .addClass(allowNewBatle === true ? "active" : "disabled");
+                .addClass(allowBattleClass);
         }
     };
 

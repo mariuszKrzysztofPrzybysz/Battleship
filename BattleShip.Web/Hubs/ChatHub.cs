@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using BattleShip.Repository.Interfaces;
 using Microsoft.AspNet.SignalR;
+using BattleShip.Web.Infrastructure;
 
 namespace BattleShip.Web.Hubs
 {
     public class ChatHub : Hub
     {
+        private readonly IAccountRepository _repository
+            = ContainerManager.Container.Resolve<IAccountRepository>();
+
         public void SendPublicMessage(string message)
         {
             var sender = Context.User.Identity.Name;
@@ -45,18 +50,21 @@ namespace BattleShip.Web.Hubs
                 .receivePrivateMessage(privateChatGroupName, sender, message);
         }
 
-        public override Task OnConnected()
+        public override async Task OnConnected()
         {
-            Groups.Add(Context.ConnectionId, Context.User.Identity.Name);
+            await Groups.Add(Context.ConnectionId, Context.User.Identity.Name);
 
-            return base.OnConnected();
+            var actualPlayerStatus = await _repository.EnterChatWebPage(Context.User.Identity.Name);
+
+            Clients.Others
+                .addOrUpdatePlayerPermissions(actualPlayerStatus.Login,
+                    actualPlayerStatus.AllowPrivateChat,
+                    actualPlayerStatus.AllowNewBattle);
         }
 
-        public override Task OnDisconnected(bool stopCalled)
+        public override async Task OnDisconnected(bool stopCalled)
         {
-            Groups.Remove(Context.ConnectionId, Context.User.Identity.Name);
-
-            return base.OnDisconnected(stopCalled);
+            await Groups.Remove(Context.ConnectionId, Context.User.Identity.Name);
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using BattleShip.Repository.Interfaces;
 
 namespace BattleShip.Web.Controllers
@@ -19,7 +15,9 @@ namespace BattleShip.Web.Controllers
         // GET: Chat
         public ActionResult Index()
         {
-            var viewModel = _repository.GetOnlinePlayersExcept(User.Identity.Name);
+            var accountName = User.Identity.Name;
+
+            var viewModel = _repository.GetOnlinePlayersExcept(accountName);
 
             return View(viewModel);
         }

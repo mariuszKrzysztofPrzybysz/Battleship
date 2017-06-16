@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using BattleShip.Database;
 using BattleShip.Database.Entities;
 using BattleShip.Repository.Interfaces;
@@ -98,18 +100,48 @@ namespace BattleShip.Repository.InDatabase
             return new Result {IsSuccess = true};
         }
 
-        public IEnumerable<OnChatWebPageViewModel> GetOnlinePlayersExcept(string login)
+        public IEnumerable<AccountPermissionsViewModel> GetOnlinePlayersExcept(string login)
         {
             return _context.Accounts
                 .Where(a => a.IsOnChatWebPage == true
                             && !a.Login.Equals(login, StringComparison.OrdinalIgnoreCase))
-                .Select(a => new OnChatWebPageViewModel
+                .Select(a => new AccountPermissionsViewModel
                 {
                     Login = a.Login,
                     AllowPrivateChat = a.AllowPrivateChat,
                     AllowNewBattle = a.AllowNewBattle
                 })
                 .ToList();
+        }
+
+        public async Task<AccountPermissionsViewModel> EnterChatWebPage(string accountName)
+        {
+            try
+            {
+                var oldAccountInDatabase = _context.Accounts.Single(a =>
+                    a.Login.Equals(accountName, StringComparison.OrdinalIgnoreCase));
+
+                oldAccountInDatabase.IsOnChatWebPage = true;
+
+                await _context.SaveChangesAsync();
+
+                var account = await _context.Accounts
+                    .Where(a => a.Login.Equals(accountName, StringComparison.OrdinalIgnoreCase))
+                    .Select(a => new AccountPermissionsViewModel
+                    {
+                        Login = a.Login,
+                        AllowPrivateChat = a.AllowPrivateChat,
+                        AllowNewBattle = a.AllowNewBattle
+                    })
+                    .SingleAsync();
+
+                return account;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
     }
 }
