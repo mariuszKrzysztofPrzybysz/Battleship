@@ -61,6 +61,7 @@
     <Compile Include="RepositoryHelpers\PasswordHelper.cs" />
     <Compile Include="RepositoryHelpers\Result.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
+    <Compile Include="ViewModels\BattleViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
