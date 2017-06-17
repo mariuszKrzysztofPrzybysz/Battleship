@@ -15,6 +15,11 @@ namespace BattleShip.Web.Hubs
         private readonly IAccountRepository _repository
             = ContainerManager.Container.Resolve<IAccountRepository>();
 
+        public void InviteToBattle(string addressee)
+        {
+
+        }
+
         public void SendPublicMessage(string message)
         {
             var sender = Context.User.Identity.Name;
