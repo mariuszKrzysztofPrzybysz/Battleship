@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using BattleShip.Repository.Interfaces;
 
 namespace BattleShip.Web.Controllers
@@ -13,11 +14,11 @@ namespace BattleShip.Web.Controllers
         }
 
         // GET: Chat
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var accountName = User.Identity.Name;
 
-            var viewModel = _repository.GetOnlinePlayersExcept(accountName);
+            var viewModel = await _repository.GetOnlinePlayersExcept(accountName);
 
             return View(viewModel);
         }

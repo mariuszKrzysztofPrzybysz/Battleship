@@ -12,8 +12,10 @@ namespace BattleShip.Repository.Interfaces
 
         Result AuthenticateAccount(string login, string password);
 
-        IEnumerable<AccountPermissionsViewModel> GetOnlinePlayersExcept(string login);
+        Task<IEnumerable<AccountPermissionsViewModel>> GetOnlinePlayersExcept(string login);
 
         Task<AccountPermissionsViewModel> EnterChatWebPage(string accountName);
+
+        Task<Result> ExitChatWebPage(string accountName);
     }
 }

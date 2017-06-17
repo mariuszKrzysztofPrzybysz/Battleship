@@ -8,6 +8,10 @@
 
     var chatHubProxy = $.connection.chatHub;
 
+    chatHubProxy.client.removePlayerFromTheList=function(sender) {
+        playerList.find(`li[data-player-name="` + sender + `"]`).remove();
+    }
+
     chatHubProxy.client.addOrUpdatePlayerPermissions = function (sender, allowPrivateChat, allowBattle) {
         var playerOnTheList = playerList.find(`li[data-player-name="` + sender + `"]`);
 
@@ -16,7 +20,7 @@
 
         if (playerOnTheList.length ===0) {
             //TODO: Dodać nowozalogowanego użytkownika do listy
-            var newPlayer = `<li class="list-group-item" data-player-name="`+sender+`">
+            var newPlayer = $(`<li class="list-group-item" data-player-name="`+sender+`">
                                     <div class="media">
                                         <div class="media-left">
                                             <img src="/Content/Images/Photos/`+sender+`.jpg" class="img-rounded" alt="`+sender+`" width="50" height="50">
@@ -27,11 +31,32 @@
                                             <button type="button" class = "btn btn-danger btn-xs `+allowBattleClass+`" data-event="battle">New battle</button>
                                         </div>
                                     </div>
-                                </li>`;
+                                </li>`);
+
+            let privateChatButton = newPlayer.find('button[data-event="private-chat"]');
+            privateChatButton.click(function() {
+                bootbox.dialog({
+                    title: 'Prywatny chat',
+                    message: '<p class="text-center">Wysłano zaproszenie do ' + sender + '.</p>',
+                    onEscape: true
+                });
+
+                chatHubProxy.server.inviteToPrivateChat(sender);
+            });
+
+            let battleButton = newPlayer.find('button[data-event="battle"]');
+            battleButton.click(function () {
+                bootbox.dialog({
+                    title: 'Nowa bitwa',
+                    message: '<p class="text-center">Wysłano zaproszenie do ' + sender + '.</p>',
+                    onEscape: true
+                });
+
+                //chatHubProxy.server.inviteToBattle(addressee);
+            });
 
             playerList.prepend(newPlayer);
         } else {
-            console.log(playerOnTheList.length);
             playerOnTheList.find(`button[data-event="private-chat"]`)
                 .removeClass('active').removeClass('disabled')
                 .addClass(allowPrivateChatClass);
@@ -99,7 +124,7 @@
         privateChat.each(function () {
             if ($(this).hasClass('active')) {
                 //TODO: click vs on('click', ...
-                $(this).on('click', function () {
+                $(this).click(function () {
                     let addresseePlayerName = $(this).closest('li').data('player-name');
 
                     bootbox.dialog({

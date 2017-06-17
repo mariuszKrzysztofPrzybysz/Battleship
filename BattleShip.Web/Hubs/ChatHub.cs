@@ -52,9 +52,11 @@ namespace BattleShip.Web.Hubs
 
         public override async Task OnConnected()
         {
-            await Groups.Add(Context.ConnectionId, Context.User.Identity.Name);
+            var userName = Context.User.Identity.Name;
 
-            var actualPlayerStatus = await _repository.EnterChatWebPage(Context.User.Identity.Name);
+            await Groups.Add(Context.ConnectionId, userName);
+
+            var actualPlayerStatus = await _repository.EnterChatWebPage(userName);
 
             Clients.Others
                 .addOrUpdatePlayerPermissions(actualPlayerStatus.Login,
@@ -64,7 +66,21 @@ namespace BattleShip.Web.Hubs
 
         public override async Task OnDisconnected(bool stopCalled)
         {
-            await Groups.Remove(Context.ConnectionId, Context.User.Identity.Name);
+            var userName = Context.User.Identity.Name;
+
+            var result = await _repository.ExitChatWebPage(userName);
+
+            if (result.IsSuccess)
+            {
+                Clients.Others
+                    .removePlayerFromTheList(userName);
+
+                await Groups.Remove(Context.ConnectionId, userName);
+            }
+            else
+            {
+                //TODO: Zrzut błędu do bazy danych
+            }
         }
     }
 }

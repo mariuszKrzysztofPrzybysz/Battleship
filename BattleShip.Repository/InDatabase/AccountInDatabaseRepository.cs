@@ -100,10 +100,10 @@ namespace BattleShip.Repository.InDatabase
             return new Result {IsSuccess = true};
         }
 
-        public IEnumerable<AccountPermissionsViewModel> GetOnlinePlayersExcept(string login)
+        public async Task<IEnumerable<AccountPermissionsViewModel>> GetOnlinePlayersExcept(string login)
         {
-            return _context.Accounts
-                .Where(a => a.IsOnChatWebPage == true
+            var result = _context.Accounts
+                .Where(a => a.IsOnChatWebPage
                             && !a.Login.Equals(login, StringComparison.OrdinalIgnoreCase))
                 .Select(a => new AccountPermissionsViewModel
                 {
@@ -111,7 +111,9 @@ namespace BattleShip.Repository.InDatabase
                     AllowPrivateChat = a.AllowPrivateChat,
                     AllowNewBattle = a.AllowNewBattle
                 })
-                .ToList();
+                .ToListAsync();
+
+            return await result;
         }
 
         public async Task<AccountPermissionsViewModel> EnterChatWebPage(string accountName)
@@ -141,6 +143,25 @@ namespace BattleShip.Repository.InDatabase
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public async Task<Result> ExitChatWebPage(string accountName)
+        {
+            try
+            {
+                var oldAccountInDatabase = _context.Accounts.Single(a =>
+                    a.Login.Equals(accountName, StringComparison.OrdinalIgnoreCase));
+
+                oldAccountInDatabase.IsOnChatWebPage = false;
+
+                await _context.SaveChangesAsync();
+
+                return new Result {IsSuccess = true};
+            }
+            catch (Exception ex)
+            {
+                return new Result {IsSuccess = false, ErrorMessage = ex.Message};
             }
         }
     }
