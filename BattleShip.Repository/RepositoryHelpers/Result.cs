@@ -5,5 +5,7 @@
         public bool IsSuccess { get; set; }
 
         public string ErrorMessage { get; set; }
+
+        public dynamic Data { get; set; }
     }
 }
