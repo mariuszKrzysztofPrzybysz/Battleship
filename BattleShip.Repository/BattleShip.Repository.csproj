@@ -58,6 +58,7 @@
     <Compile Include="Interfaces\IBattleRepository.cs" />
     <Compile Include="Interfaces\IRoleRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryHelpers\BoardHelper.cs" />
     <Compile Include="RepositoryHelpers\PasswordHelper.cs" />
     <Compile Include="RepositoryHelpers\Result.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
