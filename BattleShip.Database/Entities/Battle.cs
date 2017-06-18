@@ -24,9 +24,9 @@ namespace BattleShip.Database.Entities
         [MaxLength(500)]
         public string OpponentBoard { get; set; }
 
-        public bool PlayerBoardIsFilled { get; set; }
+        public bool PlayerIsReady { get; set; }
 
-        public bool OpponentBoardIsFilled { get; set; }
+        public bool OpponentIsReady { get; set; }
 
         [Required]
         [DataType(DataType.DateTime)]
