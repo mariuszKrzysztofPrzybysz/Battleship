@@ -8,5 +8,7 @@ namespace BattleShip.Repository.Interfaces
     public interface IBattleRepository
     {
         Task<Result> CreateAsync(CreateBattleViewModel battle);
+
+        Task<Result> UploadBoardAsync(long battleId, string userName, string board);
     }
 }

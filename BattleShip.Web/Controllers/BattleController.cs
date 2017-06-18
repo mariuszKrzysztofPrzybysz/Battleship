@@ -30,5 +30,14 @@ namespace BattleShip.Web.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        public async Task<ActionResult> UploadBoard(long battleId, string board)
+        {
+            var userName = User.Identity.Name;
+
+            var result = await _repository.UploadBoardAsync(battleId, userName, board);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }
