@@ -18,6 +18,16 @@ namespace BattleShip.Database.Entities
         [Required]
         public long OpponentId { get; set; }
 
+        [MaxLength(500)]
+        public string PlayerBoard { get; set; }
+
+        [MaxLength(500)]
+        public string OpponentBoard { get; set; }
+
+        public bool PlayerBoardIsFilled { get; set; }
+
+        public bool OpponentBoardIsFilled { get; set; }
+
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime StartUtcDateTime { get; set; }

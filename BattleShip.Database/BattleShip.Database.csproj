@@ -74,6 +74,10 @@
     <Compile Include="Migrations\201706141243259_AddIsOnChatWebPageColumn.Designer.cs">
       <DependentUpon>201706141243259_AddIsOnChatWebPageColumn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706182319307_AddAFewColumnsToBattleEntity.cs" />
+    <Compile Include="Migrations\201706182319307_AddAFewColumnsToBattleEntity.Designer.cs">
+      <DependentUpon>201706182319307_AddAFewColumnsToBattleEntity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -96,6 +100,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706141243259_AddIsOnChatWebPageColumn.resx">
       <DependentUpon>201706141243259_AddIsOnChatWebPageColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706182319307_AddAFewColumnsToBattleEntity.resx">
+      <DependentUpon>201706182319307_AddAFewColumnsToBattleEntity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
