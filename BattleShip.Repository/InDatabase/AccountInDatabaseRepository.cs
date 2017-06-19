@@ -101,7 +101,7 @@ namespace BattleShip.Repository.InDatabase
         }
 
         public async Task<IEnumerable<AccountPermissionsViewModel>> GetOnlinePlayersExcept(string login)
-        {
+        {            
             var result = _context.Accounts
                 .Where(a => a.IsOnChatWebPage
                             && !a.Login.Equals(login, StringComparison.OrdinalIgnoreCase))

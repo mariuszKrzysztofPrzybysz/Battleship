@@ -10,5 +10,7 @@ namespace BattleShip.Repository.Interfaces
         Task<Result> CreateAsync(CreateBattleViewModel battle);
 
         Task<Result> UploadBoardAsync(long battleId, string userName, string board);
+
+        Task<Result> AttackAsync(long battleId, string attackerName, string cell);
     }
 }

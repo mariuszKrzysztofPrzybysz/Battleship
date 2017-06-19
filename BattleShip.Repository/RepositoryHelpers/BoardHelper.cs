@@ -6,6 +6,7 @@ namespace BattleShip.Repository.RepositoryHelpers
     {
         public Result Validate(string board)
         {
+            return new Result {IsSuccess = true};
             throw new NotImplementedException();
         }
     }

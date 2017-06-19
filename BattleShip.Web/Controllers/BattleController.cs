@@ -39,5 +39,14 @@ namespace BattleShip.Web.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        public async Task<ActionResult> Attack(long battleId, string cell)
+        {
+            var attackerName = User.Identity.Name;
+
+            var result = await _repository.AttackAsync(battleId, attackerName, cell);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }

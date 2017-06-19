@@ -80,7 +80,7 @@ namespace BattleShip.Repository.InDatabase
                                             b.Opponent.Login.Equals(userName, StringComparison.OrdinalIgnoreCase) &&
                                             b.OpponentIsReady == false));
             if (battleInDatabase == null)
-                return new Result { IsSuccess = false };
+                return new Result {IsSuccess = false};
 
             if (accountInDatabase.AccountId == battleInDatabase.PlayerId)
             {
@@ -96,6 +96,94 @@ namespace BattleShip.Repository.InDatabase
             await _context.SaveChangesAsync();
 
             return new Result {IsSuccess = true, Data = new {id = battleInDatabase.BattleId}};
+        }
+
+        public async Task<Result> AttackAsync(long battleId, string attackerName, string cell)
+        {
+            if (string.IsNullOrEmpty(attackerName) || string.IsNullOrWhiteSpace(attackerName))
+                return new Result {IsSuccess = false};
+
+            if (string.IsNullOrEmpty(cell) || string.IsNullOrWhiteSpace(cell))
+                return new Result {IsSuccess = false};
+
+            var battleInDatabase = await _context.Battles
+                .SingleOrDefaultAsync(b => !b.WinnerId.HasValue
+                                           && b.BattleId == battleId
+                                           &&
+                                           (b.Player.Login.Equals(attackerName, StringComparison.OrdinalIgnoreCase)
+                                            ||
+                                            b.Opponent.Login.Equals(attackerName, StringComparison.OrdinalIgnoreCase)));
+
+            if (battleInDatabase == null)
+                return new Result {IsSuccess = false,ErrorMessage = "Error"};
+
+            string newBoard;
+            Result result;
+
+            if (battleInDatabase.Player.Login.Equals(attackerName, StringComparison.OrdinalIgnoreCase))
+            {
+                newBoard = battleInDatabase.OpponentBoard.Replace(cell, String.Empty);
+
+                if (newBoard == battleInDatabase.OpponentBoard)
+                    result = new Result {IsSuccess = true, Data = new {result = "missed", isGameOver = false}};
+
+                else if (newBoard == string.Empty)
+                {
+                    battleInDatabase.OpponentBoard = newBoard;
+                    battleInDatabase.EndUtcDateTime = DateTime.UtcNow;
+                    result = new Result
+                    {
+                        IsSuccess = true,
+                        Data =
+                            new
+                            {
+                                result = "hitted",
+                                isGameOver = true
+                            }
+                    };
+                    battleInDatabase.WinnerId = battleInDatabase.PlayerId;
+                }
+                else
+                {
+                    battleInDatabase.OpponentBoard = newBoard;
+                    result = new Result {IsSuccess = true, Data = new {result = "hitted"}};
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                newBoard = battleInDatabase.PlayerBoard.Replace(cell, String.Empty);
+
+                if (newBoard == battleInDatabase.PlayerBoard)
+                    result = new Result {IsSuccess = true, Data = new {result = "missed", isGameOver = false}};
+
+                else if (newBoard == string.Empty)
+                {
+                    battleInDatabase.PlayerBoard = newBoard;
+                    battleInDatabase.EndUtcDateTime = DateTime.UtcNow;
+                    result = new Result
+                    {
+                        IsSuccess = true,
+                        Data =
+                            new
+                            {
+                                result = "hitted",
+                                isGameOver = true
+                            }
+                    };
+                    battleInDatabase.WinnerId = battleInDatabase.OpponentId;
+                }
+                else
+                {
+                    battleInDatabase.PlayerBoard = newBoard;
+                    result = new Result {IsSuccess = true, Data = new {result = "hitted"}};
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            return result;
         }
     }
 }
