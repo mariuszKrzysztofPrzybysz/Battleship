@@ -186,6 +186,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\battle.jpg" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\Photos\ifajka.jpg" />
     <Content Include="Content\Images\Photos\iszczerba.jpg" />

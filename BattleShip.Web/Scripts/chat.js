@@ -2,6 +2,7 @@
     const messageInput = $('input#message-input');
     const chatMessageContainer = $('ul#js-chat-messages-container');
     const privateChat = $('button[data-event="private-chat"]');
+    const battle = $('button[data-event="battle"]');
     const navTabs = $('ul#js-nav-tabs');
     const tabPaneContainer = $('div#js-tab-pane-container');
     const playerList = $('ul#player-list-container');
@@ -99,6 +100,41 @@
         });
     };
 
+    chatHubProxy.client.receiveInvitationToBattle = function (playerName) {
+        bootbox.confirm({
+            title: `Gracz ` + playerName + `wyzywa cię na bitwę. Podejmiesz wyzwanie?`,
+            message: `<center><img src="Content/Images/battle.jpg" class="img-rounded" alt="Cinque Terre" width="100%"></center>`,
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Nie'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Tak'
+                }
+            },
+            callback: function (result) {
+                if (result === true) {
+                    $.ajax({
+                        url: "/Battle/Create",
+                        type: "POST",
+                        data: { playerName: playerName },
+                        success: function(result) {
+                            if (result.IsSuccess === true) {
+                                
+                            }
+                        },
+                        error: function(message) {
+                            console.log(message);
+                        }
+                    });
+                    
+                } else {
+
+                }
+            }
+        });
+    };
+
     function initClosePrivateChat(navTab, playerName, privateChatGroupName) {
         navTab.find('span.close').click(function () {
             navTab.remove();
@@ -152,6 +188,23 @@
                     });
 
                     chatHubProxy.server.inviteToPrivateChat(addresseePlayerName);
+                });
+            }
+        });
+
+        battle.each(function () {
+            if ($(this).hasClass('active')) {
+                //TODO: click vs on('click', ...
+                $(this).click(function () {
+                    let addresseePlayerName = $(this).closest('li').data('player-name');
+
+                    bootbox.dialog({
+                        title: 'Bitwa',
+                        message: '<p class="text-center">Wysłano zaproszenie do ' + addresseePlayerName + '.</p>',
+                        onEscape: true
+                    });
+
+                    chatHubProxy.server.inviteToBattle(addresseePlayerName);
                 });
             }
         });

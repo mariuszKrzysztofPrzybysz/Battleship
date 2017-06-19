@@ -18,19 +18,21 @@ namespace BattleShip.Web.Controllers
             _repository = repository;
         }
 
-        //[HttpPost]
-        public async Task<ActionResult> Create(string opponentName)
+        [HttpPost]
+        public async Task<ActionResult> Create(string playerName)
         {
             var result = await _repository.CreateAsync(new CreateBattleViewModel
             {
-                PlayerName = User.Identity.Name,
-                OpponentName = opponentName,
+                PlayerName = playerName,
+                OpponentName = User.Identity.Name,
                 StartUtcDateTime = DateTime.UtcNow
             });
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadBoard(long battleId, string board)
         {
             var userName = User.Identity.Name;
@@ -40,6 +42,8 @@ namespace BattleShip.Web.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Attack(long battleId, string cell)
         {
             var attackerName = User.Identity.Name;
