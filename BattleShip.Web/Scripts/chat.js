@@ -198,10 +198,10 @@ function addNewMessage(sender, message) {
                             <img src= "/Content/Images/Photos/` + encodedSender + `.jpg" class ="img-rounded" alt= "` + encodedSender + `" width="75" height="75">
                         </div>
                     <div class="media-body">
-                        <h3 class="media-heading">&nbsp; <small>&nbsp; <i>&nbsp; Published&nbsp; ` + date + ` </i></small></h3>
+                        <h3 class="media-heading">&nbsp; <small>&nbsp; <i>&nbsp; Published&nbsp; ` + date.toUTCString() + ` </i></small></h3>
                         <p> ` + encodedMessage + ` </p>
                     </div>
                  </div>
                 </div>
             </li>`;
-}
+};
