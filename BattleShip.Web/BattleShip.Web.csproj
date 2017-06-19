@@ -187,7 +187,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\logo.png" />
-    <Content Include="Content\Images\Photos\arozenek.jpg" />
     <Content Include="Content\Images\Photos\ifajka.jpg" />
     <Content Include="Content\Images\Photos\iszczerba.jpg" />
     <Content Include="Content\Images\Photos\izloty.jpg" />
@@ -196,7 +195,6 @@
     <Content Include="Content\Images\Photos\mkrol.jpg" />
     <Content Include="Content\Images\Photos\mprzybysz.jpg" />
     <Content Include="Content\Images\Photos\zjezioranski.jpg" />
-    <Content Include="Content\Images\Photos\znowak.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

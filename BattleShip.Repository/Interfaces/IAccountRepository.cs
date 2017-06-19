@@ -8,9 +8,9 @@ namespace BattleShip.Repository.Interfaces
 {
     public interface IAccountRepository
     {
-        Result Add(AddAccountViewModel viewModel);
+        Task<Result> Add(AddAccountViewModel viewModel);
 
-        Result AuthenticateAccount(string login, string password);
+        Task<Result> AuthenticateAccount(string login, string password);
 
         Task<IEnumerable<AccountPermissionsViewModel>> GetOnlinePlayersExcept(string login);
 

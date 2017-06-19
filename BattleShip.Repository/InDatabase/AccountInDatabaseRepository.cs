@@ -20,10 +20,10 @@ namespace BattleShip.Repository.InDatabase
             _context = context;
         }
 
-        public Result Add(AddAccountViewModel viewModel)
+        public async Task<Result> Add(AddAccountViewModel viewModel)
         {
-            var isExistsAccountInDatabase = _context.Accounts
-                .Any(a => a.Login.Equals(viewModel.Login, StringComparison.OrdinalIgnoreCase));
+            var isExistsAccountInDatabase = await _context.Accounts
+                .AnyAsync(a => a.Login.Equals(viewModel.Login, StringComparison.OrdinalIgnoreCase));
 
             if (isExistsAccountInDatabase)
                 return new Result
@@ -50,7 +50,7 @@ namespace BattleShip.Repository.InDatabase
             };
 
             _context.Accounts.Add(account);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             var accountId = account.AccountId;
 
             if (accountId <= 0)
@@ -61,9 +61,11 @@ namespace BattleShip.Repository.InDatabase
                 };
 
             //TODO: Replace magic string with ...
-            var playerRoleId = _context.Roles
-                .Single(r => r.Name.Equals("Player",
-                    StringComparison.OrdinalIgnoreCase)).RoleId;
+            var playerRole = await _context.Roles
+                .SingleAsync(r => r.Name.Equals("Player",
+                    StringComparison.OrdinalIgnoreCase));
+
+            var playerRoleId = playerRole.RoleId;
 
             var accountRole = new AccountRole
             {
@@ -72,7 +74,7 @@ namespace BattleShip.Repository.InDatabase
             };
 
             _context.AccountRoles.Add(accountRole);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             var accountRoleId = accountRole.AccountRoleId;
 
             if (accountRoleId > 0)
@@ -85,19 +87,22 @@ namespace BattleShip.Repository.InDatabase
             };
         }
 
-        public Result AuthenticateAccount(string login, string password)
+        public async Task<Result> AuthenticateAccount(string login, string password)
         {
             var hashedPassword = PasswordHelper.GetSha512CngPasswordHash(password);
 
-            var account = _context.Accounts
-                .SingleOrDefault(p =>
+            var account = await _context.Accounts
+                .SingleOrDefaultAsync(p =>
                     p.Login.Equals(login, StringComparison.OrdinalIgnoreCase)
                     && p.Password == hashedPassword);
 
-            if (account == null)
-                return new Result {IsSuccess = false, ErrorMessage = "Wprowadzony adres e-mail lub hasło nie pasuje do żadnego konta" };
-
-            return new Result {IsSuccess = true};
+            return account == null
+                ? new Result
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Wprowadzony adres e-mail lub hasło nie pasuje do żadnego konta"
+                }
+                : new Result {IsSuccess = true};
         }
 
         public async Task<IEnumerable<AccountPermissionsViewModel>> GetOnlinePlayersExcept(string login)

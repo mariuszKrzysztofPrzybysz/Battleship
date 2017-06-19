@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -32,7 +33,7 @@ namespace BattleShip.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SignUp(SignUpAccountViewModel viewModel)
+        public async Task<ActionResult> SignUp(SignUpAccountViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -42,17 +43,17 @@ namespace BattleShip.Web.Controllers
                 return View(viewModel);
             }
 
-            var result = _repository.Add(viewModel);
+            var result = await _repository.Add(viewModel);
 
             if (!result.IsSuccess)
             {
                 //TODO: Poinformować o błędzie
                 //throw new NotImplementedException();
-                ModelState.AddModelError(result.ErrorMessage, new Exception());
+                ModelState.AddModelError(string.Empty, result.ErrorMessage);
                 return View();
             }
 
-            SetAuthCookieAndAddSession(viewModel.Login.ToLower(), true);
+            await SetAuthCookieAndAddSession(viewModel.Login.ToLower(), true);
 
             return RedirectToAction("Index", "Home");
         }
@@ -66,21 +67,21 @@ namespace BattleShip.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SignIn(SignInAccountViewModel viewModel)
+        public async Task<ActionResult> SignIn(SignInAccountViewModel viewModel)
         {
             if (!ModelState.IsValid)
                 return View();
 
-            var authenticatedAccount = _repository
+            var authenticatedAccount = await _repository
                 .AuthenticateAccount(viewModel.Login, viewModel.Password);
 
             if (!authenticatedAccount.IsSuccess)
             {
-                ModelState.AddModelError(authenticatedAccount.ErrorMessage,new Exception());
+                ModelState.AddModelError(string.Empty, authenticatedAccount.ErrorMessage);
                 return View();
             }
 
-            SetAuthCookieAndAddSession(viewModel.Login.ToLower(), true);
+            await SetAuthCookieAndAddSession(viewModel.Login.ToLower(), true);
             return RedirectToAction("Index", "Player");
         }
 
@@ -91,11 +92,11 @@ namespace BattleShip.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private void SetAuthCookieAndAddSession(string userName, bool createPersistentCookie)
+        private async Task SetAuthCookieAndAddSession(string userName, bool createPersistentCookie)
         {
             FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
 
-            var rolesList = _accountRoleRepository.GetAccountRoles(userName);
+            var rolesList = await _accountRoleRepository.GetAccountRoles(userName);
             
             Session.Add("Roles", rolesList);
         }
