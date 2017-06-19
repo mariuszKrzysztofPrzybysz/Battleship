@@ -107,7 +107,7 @@ namespace BattleShip.Repository.InDatabase
 
         public async Task<IEnumerable<AccountPermissionsViewModel>> GetOnlinePlayersExcept(string login)
         {            
-            var result = _context.Accounts
+            var result = await _context.Accounts
                 .Where(a => a.IsOnChatWebPage
                             && !a.Login.Equals(login, StringComparison.OrdinalIgnoreCase))
                 .Select(a => new AccountPermissionsViewModel
@@ -118,31 +118,33 @@ namespace BattleShip.Repository.InDatabase
                 })
                 .ToListAsync();
 
-            return await result;
+            return  result;
         }
 
         public async Task<AccountPermissionsViewModel> EnterChatWebPage(string accountName)
         {
             try
             {
-                var oldAccountInDatabase = _context.Accounts.Single(a =>
+                var oldAccountInDatabase = await _context.Accounts.SingleAsync(a =>
                     a.Login.Equals(accountName, StringComparison.OrdinalIgnoreCase));
 
                 oldAccountInDatabase.IsOnChatWebPage = true;
 
                 await _context.SaveChangesAsync();
 
-                var account = await _context.Accounts
-                    .Where(a => a.Login.Equals(accountName, StringComparison.OrdinalIgnoreCase))
-                    .Select(a => new AccountPermissionsViewModel
-                    {
-                        Login = a.Login,
-                        AllowPrivateChat = a.AllowPrivateChat,
-                        AllowNewBattle = a.AllowNewBattle
-                    })
-                    .SingleAsync();
+                var account =
+                    await _context.Accounts.SingleOrDefaultAsync(
+                        a => a.Login.Equals(accountName, StringComparison.OrdinalIgnoreCase));
 
-                return account;
+                if (account != null)
+                    return new AccountPermissionsViewModel
+                    {
+                        Login = account.Login,
+                        AllowNewBattle = account.AllowNewBattle,
+                        AllowPrivateChat = account.AllowPrivateChat
+                    };
+
+                return null;
 
             }
             catch (Exception ex)
