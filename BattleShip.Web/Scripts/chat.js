@@ -99,8 +99,22 @@
         });
     };
 
+    function initClosePrivateChat(navTab, playerName, privateChatGroupName) {
+        navTab.find('span.close').click(function () {
+            navTab.remove();
+            let tabPane = $('div#' + playerName);
+            tabPane.remove();
+
+            navTabs.find('li').first().addClass('active');
+            $('div#chat').addClass('active in');
+
+            chatHubProxy.server.sendPrivateMessage(privateChatGroupName,
+                "Użytkownik " + playerName + " zakończył prywaną rozmowę");
+        });
+    }
+
     chatHubProxy.client.openNewTab = function (playerName, privateChatGroupName) {
-        navTabs.append(`<li data-player-name="` +
+        let navTab = $(`<li data-player-name="` +
             playerName +
             `" data-private-chat-group-name=` +
             privateChatGroupName +
@@ -109,6 +123,10 @@
             `" data-toggle="tab"><span class="badge"></span>&nbsp;` +
             playerName +
             `&nbsp;<span class="close" aria-hidden="true">&times;</span></a></li>`);
+
+        initClosePrivateChat(navTab, playerName, privateChatGroupName);
+
+        navTabs.append(navTab);
 
         tabPaneContainer.append(`<div class="tab-pane fade" id="` +
             playerName +
