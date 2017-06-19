@@ -170,6 +170,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ErrorHelper.cs" />
+    <Compile Include="Helpers\UrlBuilder.cs" />
     <Compile Include="Hubs\BattleHub.cs" />
     <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Infrastructure\ContainerManager.cs" />
