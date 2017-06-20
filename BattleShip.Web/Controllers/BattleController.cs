@@ -18,6 +18,11 @@ namespace BattleShip.Web.Controllers
             _repository = repository;
         }
 
+        public ActionResult Play(long id)
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<ActionResult> Create(string playerName)
         {

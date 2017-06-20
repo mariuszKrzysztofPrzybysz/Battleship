@@ -255,7 +255,7 @@
     <Content Include="Views\Account\SignIn.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
-    <Content Include="Views\Battle\New.cshtml" />
+    <Content Include="Views\Battle\Play.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

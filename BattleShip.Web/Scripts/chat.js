@@ -9,6 +9,16 @@
 
     var chatHubProxy = $.connection.chatHub;
 
+    chatHubProxy.client.openNewWebPage = function(targetPage) {
+        bootbox.alert({
+            message: "Kliknij, aby przejść na nową stronę",
+            size: "small",
+            callback: function() {
+                window.open(targetPage);
+            }
+        });
+    }
+
     chatHubProxy.client.removePlayerFromTheList=function(sender) {
         playerList.find(`li[data-player-name="` + sender + `"]`).remove();
     }
@@ -34,26 +44,26 @@
                                     </div>
                                 </li>`);
 
-            let privateChatButton = newPlayer.find('button[data-event="private-chat"]');
+            let privateChatButton = newPlayer.find('button.active[data-event="private-chat"]');
             privateChatButton.click(function() {
-                bootbox.dialog({
-                    title: 'Prywatny chat',
-                    message: '<p class="text-center">Wysłano zaproszenie do ' + sender + '.</p>',
-                    onEscape: true
-                });
+                //bootbox.dialog({
+                //    title: 'Prywatny chat',
+                //    message: '<p class="text-center">Wysłano zaproszenie do ' + sender + '.</p>',
+                //    onEscape: true
+                //});
 
                 chatHubProxy.server.inviteToPrivateChat(sender);
             });
 
-            let battleButton = newPlayer.find('button[data-event="battle"]');
+            let battleButton = newPlayer.find('button.active[data-event="battle"]');
             battleButton.click(function () {
-                bootbox.dialog({
-                    title: 'Nowa bitwa',
-                    message: '<p class="text-center">Wysłano zaproszenie do ' + sender + '.</p>',
-                    onEscape: true
-                });
+                //bootbox.dialog({
+                //    title: 'Nowa bitwa',
+                //    message: '<p class="text-center">Wysłano zaproszenie do ' + sender + '.</p>',
+                //    onEscape: true
+                //});
 
-                //chatHubProxy.server.inviteToBattle(addressee);
+                chatHubProxy.server.inviteToBattle(sender);
             });
 
             playerList.prepend(newPlayer);
@@ -120,7 +130,7 @@
                         data: { playerName: playerName },
                         success: function(result) {
                             if (result.IsSuccess === true) {
-                                
+                                chatHubProxy.server.redirectToBattleWebPage(playerName, result.Data.Id);
                             }
                         },
                         error: function(message) {
@@ -178,17 +188,17 @@
         privateChat.each(function () {
             if ($(this).hasClass('active')) {
                 //TODO: click vs on('click', ...
-                $(this).click(function () {
-                    let addresseePlayerName = $(this).closest('li').data('player-name');
+                $(this).click(function() {
+                        let addresseePlayerName = $(this).closest('li').data('player-name');
 
-                    bootbox.dialog({
-                        title: 'Prywatny chat',
-                        message: '<p class="text-center">Wysłano zaproszenie do ' + addresseePlayerName + '.</p>',
-                        onEscape: true
+                        //bootbox.dialog({
+                        //    title: 'Prywatny chat',
+                        //    message: '<p class="text-center">Wysłano zaproszenie do ' + addresseePlayerName + '.</p>',
+                        //    onEscape: true
+                        //});
+
+                        chatHubProxy.server.inviteToPrivateChat(addresseePlayerName);
                     });
-
-                    chatHubProxy.server.inviteToPrivateChat(addresseePlayerName);
-                });
             }
         });
 
@@ -198,11 +208,11 @@
                 $(this).click(function () {
                     let addresseePlayerName = $(this).closest('li').data('player-name');
 
-                    bootbox.dialog({
-                        title: 'Bitwa',
-                        message: '<p class="text-center">Wysłano zaproszenie do ' + addresseePlayerName + '.</p>',
-                        onEscape: true
-                    });
+                    //bootbox.dialog({
+                    //    title: 'Bitwa',
+                    //    message: '<p class="text-center">Wysłano zaproszenie do ' + addresseePlayerName + '.</p>',
+                    //    onEscape: true
+                    //});
 
                     chatHubProxy.server.inviteToBattle(addresseePlayerName);
                 });

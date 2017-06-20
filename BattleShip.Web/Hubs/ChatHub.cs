@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using BattleShip.Repository.Interfaces;
+using BattleShip.Web.Helpers;
 using Microsoft.AspNet.SignalR;
 using BattleShip.Web.Infrastructure;
 
@@ -14,6 +15,13 @@ namespace BattleShip.Web.Hubs
     {
         private readonly IAccountRepository _repository
             = ContainerManager.Container.Resolve<IAccountRepository>();
+
+        public void RedirectToBattleWebPage(string playerName, long battleId)
+        {
+            var targetUrl = UrlBuilder.GetUrl("Battle", "Play", new string[] {$"id={battleId}"});
+
+            Clients.Groups(new List<string> {playerName, Context.User.Identity.Name}).openNewWebPage(targetUrl);
+        }
 
         public void InviteToBattle(string addresseePlayerName)
         {
