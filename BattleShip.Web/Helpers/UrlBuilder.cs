@@ -7,7 +7,7 @@ namespace BattleShip.Web.Helpers
         private static readonly string Scheme = HttpContext.Current.Request.Url.Scheme;
         private static readonly string Authority = HttpContext.Current.Request.Url.Authority;
 
-        private static string GetUrl(string controller, string action)
+        public static string GetUrl(string controller, string action)
         {
             return $"{Scheme}://{Authority}/{controller}/{action}";
         }
