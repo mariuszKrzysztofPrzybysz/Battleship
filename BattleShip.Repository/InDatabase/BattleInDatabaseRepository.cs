@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using BattleShip.Database;
@@ -115,7 +116,7 @@ namespace BattleShip.Repository.InDatabase
                                             b.Opponent.Login.Equals(attackerName, StringComparison.OrdinalIgnoreCase)));
 
             if (battleInDatabase == null)
-                return new Result {IsSuccess = false,ErrorMessage = "Error"};
+                return new Result {IsSuccess = false, ErrorMessage = "Error"};
 
             string newBoard;
             Result result;
@@ -184,6 +185,36 @@ namespace BattleShip.Repository.InDatabase
             }
 
             return result;
+        }
+
+        public async Task<Result> CheckAccessAsync(long id, string userName)
+        {
+            var battleInDatabase = await _context.Battles
+                .SingleOrDefaultAsync(b => b.BattleId == id
+                                           && (b.Player.Login.Equals(userName, StringComparison.OrdinalIgnoreCase)
+                                               || b.Opponent.Login.Equals(userName, StringComparison.OrdinalIgnoreCase)));
+
+            if (battleInDatabase == null)
+                return new Result {IsSuccess = false};
+
+            if (battleInDatabase.WinnerId != null)
+                return new Result {IsSuccess = false, ErrorMessage = "Bitwa została zakończona"};
+
+            if (battleInDatabase.Player.Login.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                return new Result
+                {
+                    IsSuccess = true,
+                    Data = battleInDatabase.PlayerBoard
+                };
+
+            if (battleInDatabase.Opponent.Login.Equals(userName, StringComparison.OrdinalIgnoreCase))
+                return new Result
+                {
+                    IsSuccess = true,
+                    Data = battleInDatabase.OpponentBoard
+                };
+
+            return new Result {IsSuccess = false, Data = new NotImplementedException()};
         }
     }
 }

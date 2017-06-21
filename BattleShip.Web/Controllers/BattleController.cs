@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using BattleShip.Repository.Interfaces;
 using BattleShip.Repository.ViewModels;
+using BattleShip.Web.ViewModels;
 
 namespace BattleShip.Web.Controllers
 {
@@ -18,8 +19,14 @@ namespace BattleShip.Web.Controllers
             _repository = repository;
         }
 
-        public ActionResult Play(long id)
+        public async Task<ActionResult> Play(long id)
         {
+            var access = await _repository.CheckAccessAsync(id, User.Identity.Name);
+
+            if (!access.IsSuccess)
+                return RedirectToAction("Index", "Error");
+
+            ViewBag.Battle = access.Data;
             return View();
         }
 
