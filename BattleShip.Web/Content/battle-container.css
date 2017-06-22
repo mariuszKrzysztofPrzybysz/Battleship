@@ -22,13 +22,13 @@ div#player table, div#opponent table {
 .js-hit {
     -ms-background-size: 100%;
     background-size: 100%;
-  background-image: url("../Content/Images/hit.jpg");
+    background-image: url("Images/hit.jpg");
 }
 
 .js-miss {
     -ms-background-size: 100%;
     background-size: 100%;
-  background-image: url("../Content/Images/miss.jpg");
+    background-image: url("Images/miss.jpg");
 }
 
 /*# sourceMappingURL=board-container.css.map */
