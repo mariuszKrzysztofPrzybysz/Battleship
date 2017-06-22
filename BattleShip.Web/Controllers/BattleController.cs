@@ -44,7 +44,6 @@ namespace BattleShip.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadBoard(long battleId, string board)
         {
             var userName = User.Identity.Name;
@@ -55,7 +54,6 @@ namespace BattleShip.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Attack(long battleId, string cell)
         {
             var attackerName = User.Identity.Name;
@@ -66,7 +64,6 @@ namespace BattleShip.Web.Controllers
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> GiveInAsync(long battleId)
         {
             var player = User.Identity.Name;

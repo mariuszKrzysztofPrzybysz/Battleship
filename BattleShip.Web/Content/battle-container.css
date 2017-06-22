@@ -1,0 +1,34 @@
+﻿* {
+  box-sizing: border-box; }
+
+div#player table, div#opponent table {
+  margin: 0 auto;
+  border: 1px solid white; }
+  div#player table td, div#opponent table td {
+    background: black;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid white;
+    width: 40px;
+    height: 40px; }
+    div#player table td button, div#opponent table td button {
+      width: 100%;
+      height: 100%; }
+
+.no-margin {
+  margin: 0; }
+
+.js-hit {
+    -ms-background-size: 100%;
+    background-size: 100%;
+  background-image: url("../Content/Images/hit.jpg");
+}
+
+.js-miss {
+    -ms-background-size: 100%;
+    background-size: 100%;
+  background-image: url("../Content/Images/miss.jpg");
+}
+
+/*# sourceMappingURL=board-container.css.map */
