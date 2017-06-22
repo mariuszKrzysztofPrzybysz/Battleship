@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using BattleShip.Repository.Interfaces;
 using BattleShip.Repository.ViewModels;
+using BattleShip.Web.Helpers;
 using BattleShip.Web.ViewModels;
 
 namespace BattleShip.Web.Controllers
@@ -26,8 +27,7 @@ namespace BattleShip.Web.Controllers
             if (!access.IsSuccess)
                 return RedirectToAction("Index", "Error");
 
-            ViewBag.Battle = access.Data;
-            return View();
+            return View(access.Data as PlayBattleViewModel);
         }
 
         [HttpPost]
@@ -62,6 +62,20 @@ namespace BattleShip.Web.Controllers
 
             var result = await _repository.AttackAsync(battleId, attackerName, cell);
 
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> GiveInAsync(long battleId)
+        {
+            var player = User.Identity.Name;
+
+            var result = await _repository.GiveInAsync(battleId, player);
+
+            if (result.IsSuccess)
+                result.Data = UrlBuilder.GetUrl("Chat", "Index");
+            
             return Json(result, JsonRequestBehavior.AllowGet);
         }
     }

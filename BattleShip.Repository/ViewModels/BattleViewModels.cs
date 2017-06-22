@@ -19,4 +19,11 @@ namespace BattleShip.Repository.ViewModels
         [DataType(DataType.DateTime)]
         public DateTime StartUtcDateTime { get; set; }
     }
+
+    public class PlayBattleViewModel
+    {
+        public string PlayerBoard { get; set; }
+
+        public string Opponent { get; set; }
+    }
 }

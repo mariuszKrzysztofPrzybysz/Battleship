@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Threading.Tasks;
 using BattleShip.Database;
 using BattleShip.Database.Entities;
@@ -204,17 +202,58 @@ namespace BattleShip.Repository.InDatabase
                 return new Result
                 {
                     IsSuccess = true,
-                    Data = battleInDatabase.PlayerBoard
+                    Data = new PlayBattleViewModel
+                    {
+                        PlayerBoard = battleInDatabase.PlayerBoard,
+                        Opponent = battleInDatabase.Opponent.Login
+                    }
                 };
 
             if (battleInDatabase.Opponent.Login.Equals(userName, StringComparison.OrdinalIgnoreCase))
                 return new Result
                 {
                     IsSuccess = true,
-                    Data = battleInDatabase.OpponentBoard
+                    Data = new PlayBattleViewModel
+                    {
+                        PlayerBoard = battleInDatabase.OpponentBoard,
+                        Opponent = battleInDatabase.Player.Login
+                    }
                 };
 
             return new Result {IsSuccess = false, Data = new NotImplementedException()};
+        }
+
+        public async Task<Result> GiveInAsync(long battleId, string userName)
+        {
+            var playerInDatabase =
+                await _context.Accounts.SingleOrDefaultAsync(a
+                    => a.Login.Equals(userName, StringComparison.OrdinalIgnoreCase));
+
+            if (playerInDatabase == null)
+                return new Result();
+
+            var battleInDatabase = await _context.Battles
+                .SingleOrDefaultAsync(b
+                    => b.BattleId == battleId
+                       && (b.Player.AccountId == playerInDatabase.AccountId
+                           || b.Opponent.AccountId == playerInDatabase.AccountId));
+
+            if (battleInDatabase == null)
+                return new Result();
+
+            battleInDatabase.WinnerId = battleInDatabase.Player.AccountId == playerInDatabase.AccountId
+                ? battleInDatabase.Opponent.AccountId
+                : battleInDatabase.Player.AccountId;
+
+            battleInDatabase.EndUtcDateTime = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            var winner = battleInDatabase.Player.Login.Equals(userName, StringComparison.OrdinalIgnoreCase)
+                ? battleInDatabase.Opponent.Login
+                : battleInDatabase.Player.Login;
+
+            return new Result {IsSuccess = true};
         }
     }
 }

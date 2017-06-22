@@ -183,12 +183,15 @@
     <Compile Include="ViewModels\AccountViewModels.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\battle-container.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\battle.jpg" />
+    <Content Include="Content\Images\hit.jpg" />
     <Content Include="Content\Images\logo.png" />
+    <Content Include="Content\Images\miss.jpg" />
     <Content Include="Content\Images\Photos\ifajka.jpg" />
     <Content Include="Content\Images\Photos\iszczerba.jpg" />
     <Content Include="Content\Images\Photos\izloty.jpg" />
@@ -229,6 +232,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\print-board.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
