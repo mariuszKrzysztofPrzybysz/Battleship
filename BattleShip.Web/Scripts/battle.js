@@ -1,4 +1,5 @@
 ﻿$(function () {
+    const root = window.location.origin;
     const battleId = getUrlParameter("id");
 
     $('div#player table').append(printBoardForPlayer());
@@ -111,11 +112,11 @@
 
         battleHubProxy.server.joinBattle(battleId);
 
+        initOpponentBoard();
+        
         const giveInButton = $("button#js-give-in");
         const clearBoard = $("button#js-clear-board");
         const readyButton = $("button#js-ready");
-
-        const root = window.location.origin;
 
         giveInButton.click(function () {
             bootbox.confirm({
@@ -212,6 +213,45 @@
             }
         });
     });
+
+    var initOpponentBoard = function () {
+        const opponentCells = $('div#opponent td.cell');
+
+        opponentCells.each(function () {
+            $(this).click(function () {
+                let cell = $(this);
+                $.ajax({
+                    url: root + "/Battle/AttackAsync",
+                    method: "POST",
+                    data: { battleId: battleId, cell: $(this).data("cell") },
+                    success: function (result) {
+                        if (result.IsSuccess) {
+                            if (result.Data.isGameOver === true) {
+                                bootbox.alert({
+                                    title: "Game over",
+                                    message: "You have won",
+                                    callback: function (r) {
+                                        battleHubProxy.server.leaveBattle(battleId);
+                                        window.location = root + "/Chat/Index";
+                                    }
+                                });
+                            } else {
+                                if (result.Data.result === "missed")
+                                    cell.find("button").addClass("js-miss");
+                                else
+                                    cell.find("button").addClass("js-hit");
+
+                            }
+                            cell.off("click");
+                        }
+                    },
+                    error: function (message) {
+                        console.log(message);
+                    }
+                });
+            });
+        });
+    }
 });
 
 getUrlParameter = function(sParam) {
@@ -227,4 +267,5 @@ getUrlParameter = function(sParam) {
             return sParameterName[1] === undefined ? true : sParameterName[1];
         }
     }
+    return null;
 };
