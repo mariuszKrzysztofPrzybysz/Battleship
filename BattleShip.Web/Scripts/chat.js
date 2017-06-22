@@ -112,8 +112,8 @@
 
     chatHubProxy.client.receiveInvitationToBattle = function (playerName) {
         bootbox.confirm({
-            title: `Gracz ` + playerName + `wyzywa cię na bitwę. Podejmiesz wyzwanie?`,
-            message: `<center><img src="Content/Images/battle.jpg" class="img-rounded" alt="Cinque Terre" width="100%"></center>`,
+            title: `Gracz ${playerName} wyzywa cię na bitwę. Podejmiesz wyzwanie?`,
+            message: `<center><img src="Content/Images/battle.jpg" class="img-rounded" alt="battle" width="100%"></center>`,
             buttons: {
                 cancel: {
                     label: '<i class="fa fa-times"></i> Nie'
