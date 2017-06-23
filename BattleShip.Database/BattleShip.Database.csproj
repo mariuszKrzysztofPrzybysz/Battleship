@@ -82,6 +82,10 @@
     <Compile Include="Migrations\201706182338139_ChangeColumnsNameInBattleEntity.Designer.cs">
       <DependentUpon>201706182338139_ChangeColumnsNameInBattleEntity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706232305007_AddAttackerColumnToBattleEntity.cs" />
+    <Compile Include="Migrations\201706232305007_AddAttackerColumnToBattleEntity.Designer.cs">
+      <DependentUpon>201706232305007_AddAttackerColumnToBattleEntity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -110,6 +114,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706182338139_ChangeColumnsNameInBattleEntity.resx">
       <DependentUpon>201706182338139_ChangeColumnsNameInBattleEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706232305007_AddAttackerColumnToBattleEntity.resx">
+      <DependentUpon>201706232305007_AddAttackerColumnToBattleEntity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

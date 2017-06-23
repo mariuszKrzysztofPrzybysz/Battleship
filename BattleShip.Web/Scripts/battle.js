@@ -125,6 +125,9 @@
                     data: { battleId: battleId, cell: $(this).data("cell") },
                     success: function(result) {
                         if (result.IsSuccess) {
+                            uninitializeOpponentBoard();
+                            $("div#action").text("Action: defend");
+
                             if (result.Data.result === "missed") {
                                 cell.find("button").addClass("js-miss");
                                 battleHubProxy.server.updateCellStatus(battleId, cell.data("cell"), false);
@@ -156,6 +159,10 @@
             });
         });
     };
+
+    function uninitializeOpponentBoard() {
+        opponentTable.find("td.cell").off('click');
+    }
 
     function initializeControlPanel() {
         const giveInButton = $("button#js-give-in");
@@ -324,13 +331,16 @@
         });
     }
 
-    battleHubProxy.client.updateCellStatus= function(cell, isHitted) {
+    battleHubProxy.client.updateCellStatus = function (cell, isHitted) {
         let playerButton = playerTable.find(`td[data-cell="${cell}"]`).find("button");
 
         if (isHitted)
             playerButton.addClass("js-hit");
         else
             playerButton.addClass("js-miss");
+
+        opponentTable.on("click","td.cell" ,initializeOpponentBoard);
+        $("div#action").text("Action: attack");
     }
 });
 

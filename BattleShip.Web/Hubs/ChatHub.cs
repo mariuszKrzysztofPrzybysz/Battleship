@@ -91,7 +91,7 @@ namespace BattleShip.Web.Hubs
                 Clients.Others
                     .removePlayerFromTheList(userName);
 
-                await Groups.Remove(Context.ConnectionId, userName);
+                //await Groups.Remove(Context.ConnectionId, userName);
             }
             else
             {

@@ -38,7 +38,8 @@ namespace BattleShip.Repository.InDatabase
             {
                 PlayerId = player.AccountId,
                 OpponentId = opponent.AccountId,
-                StartUtcDateTime = viewModel.StartUtcDateTime
+                StartUtcDateTime = viewModel.StartUtcDateTime,
+                Attacker = opponent.AccountId
             };
 
             var newBattle = _context.Battles.Add(battle);
@@ -150,6 +151,8 @@ namespace BattleShip.Repository.InDatabase
                     result = new Result {IsSuccess = true, Data = new {result = "hitted"}};
                 }
 
+                battleInDatabase.Attacker = battleInDatabase.OpponentId;
+
                 await _context.SaveChangesAsync();
             }
             else
@@ -180,6 +183,8 @@ namespace BattleShip.Repository.InDatabase
                     battleInDatabase.PlayerBoard = newBoard;
                     result = new Result {IsSuccess = true, Data = new {result = "hitted"}};
                 }
+
+                battleInDatabase.Attacker = battleInDatabase.PlayerId;
 
                 await _context.SaveChangesAsync();
             }

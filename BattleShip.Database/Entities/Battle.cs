@@ -28,6 +28,8 @@ namespace BattleShip.Database.Entities
 
         public bool OpponentIsReady { get; set; }
 
+        public long Attacker { get; set; }
+
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime StartUtcDateTime { get; set; }
