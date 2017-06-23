@@ -81,12 +81,14 @@ namespace BattleShip.Repository.InDatabase
             if (battleInDatabase == null)
                 return new Result {IsSuccess = false};
 
-            if (accountInDatabase.AccountId == battleInDatabase.PlayerId)
+            if (!battleInDatabase.PlayerIsReady
+                && accountInDatabase.AccountId == battleInDatabase.PlayerId)
             {
                 battleInDatabase.PlayerBoard = board;
                 battleInDatabase.PlayerIsReady = true;
             }
-            else
+            if (!battleInDatabase.OpponentIsReady
+                && accountInDatabase.AccountId == battleInDatabase.OpponentId)
             {
                 battleInDatabase.OpponentBoard = board;
                 battleInDatabase.OpponentIsReady = true;
@@ -116,8 +118,8 @@ namespace BattleShip.Repository.InDatabase
             if (battleInDatabase == null)
                 return new Result {IsSuccess = false, ErrorMessage = "Error"};
 
-            string newBoard;
-            Result result;
+            string newBoard=String.Empty;
+            Result result=null;
 
             if (battleInDatabase.Player.Login.Equals(attackerName, StringComparison.OrdinalIgnoreCase))
             {
