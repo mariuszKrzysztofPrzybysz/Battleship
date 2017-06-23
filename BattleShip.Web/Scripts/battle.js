@@ -1,119 +1,163 @@
-﻿$(function () {
+﻿$(function() {
+    const battleHubProxy = $.connection.battleHub;
+
     const root = window.location.origin;
     const battleId = getUrlParameter("id");
 
-    $('div#player table').append(printBoardForPlayer());
-    $('div#opponent table').append(printBoardForOpponent());
+    const playerTable = $("div#player table");
+    const opponentTable = $("div#opponent table");
 
-    var tbody = $('div#player tbody');
+    playerTable.append(printBoardForPlayer());
+    opponentTable.append(printBoardForOpponent());
 
-    const occupied = 'occupied';
 
-    tbody.find('td.cell').each(function () {
-        $(this).on('click', function () {
-            const button = $(this).find('button');
-            const cellPosition = $(this).data('cell');
-            if ($(this).hasClass(occupied)) {
-                $(this).removeClass(occupied);
+    function initializePlayerBoard() {
+        var tbody = $("div#player tbody");
 
-                button.removeClass('btn-success');
-                button.addClass('btn-info');
+        const occupied = "occupied";
 
-                removeConstraints(cellPosition);
-            } else {
-                let counter = parseInt($(this).attr('data-counter'));
-                if (counter === 0) {
-                    $(this).addClass(occupied);
+        tbody.find("td.cell").each(function() {
+            $(this).on("click",
+                function() {
+                    const button = $(this).find("button");
+                    const cellPosition = $(this).data('cell');
+                    if ($(this).hasClass(occupied)) {
+                        $(this).removeClass(occupied);
 
-                    button.removeClass('btn-info');
-                    button.addClass('btn-success');
+                        button.removeClass('btn-success');
+                        button.addClass('btn-info');
 
-                    addConstraints(cellPosition);
+                        removeConstraints(cellPosition);
+                    } else {
+                        let counter = parseInt($(this).attr('data-counter'));
+                        if (counter === 0) {
+                            $(this).addClass(occupied);
+
+                            button.removeClass('btn-info');
+                            button.addClass('btn-success');
+
+                            addConstraints(cellPosition);
+                        }
+                    }
+                });
+        });
+
+        const columns = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", ""];
+
+        function addConstraints(cellPosition) {
+            let column = cellPosition.split("-")[0];
+            let row = parseInt(cellPosition.split("-")[1]);
+
+            let leftTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]
+                }-${row - 1}"]`);
+            increaseCellCounter(leftTopCell);
+
+            let rightTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row - 1
+                }"]`);
+            increaseCellCounter(rightTopCell);
+
+            let rightBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row + 1
+                }"]`);
+            increaseCellCounter(rightBottomCell);
+
+            let leftBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]
+                }-${row + 1}"]`);
+            increaseCellCounter(leftBottomCell);
+        };
+
+        function increaseCellCounter(cell) {
+            let cellCounter = parseInt(cell.attr("data-counter"));
+            if (!isNaN(cellCounter)) {
+                cellCounter++;
+                cell.attr("data-counter", cellCounter.toString());
+                cell.find("button").addClass("disabled");
+            }
+        };
+
+        function removeConstraints(cellPosition) {
+            let column = cellPosition.split("-")[0];
+            let row = parseInt(cellPosition.split("-")[1]);
+
+            let leftTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]}-${row - 1
+                }"]`);
+            decreaseCellCounter(leftTopCell);
+
+            let rightTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]
+                }-${row - 1
+                }"]`);
+            decreaseCellCounter(rightTopCell);
+
+            let rightBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row + 1
+                }"]`);
+            decreaseCellCounter(rightBottomCell);
+
+            let leftBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]
+                }-${row + 1
+                }"]`);
+            decreaseCellCounter(leftBottomCell);
+        };
+
+        function decreaseCellCounter(cell) {
+            let cellCounter = parseInt(cell.attr("data-counter"));
+            if (!isNaN(cellCounter)) {
+                cellCounter--;
+                cell.attr("data-counter", cellCounter.toString());
+                if (cellCounter <= 0) {
+                    cell.find("button").removeClass("disabled");
                 }
             }
+        };
+    };
+
+    function uninitializePlayerBoard() {
+        playerTable.find("td.cell").off('click');
+    }
+
+    function initializeOpponentBoard() {
+        const opponentCells = $('div#opponent td.cell');
+
+        opponentCells.each(function() {
+            $(this).click(function() {
+                let cell = $(this);
+                $.ajax({
+                    url: root + "/Battle/AttackAsync",
+                    method: "POST",
+                    data: { battleId: battleId, cell: $(this).data("cell") },
+                    success: function(result) {
+                        if (result.IsSuccess) {
+                            if (result.Data.result === "missed") {
+                                cell.find("button").addClass("js-miss");
+                                battleHubProxy.server.updateCellStatus(battleId, cell.data("cell"), false);
+                            }
+                            else {
+                                cell.find("button").addClass("js-hit");
+                                battleHubProxy.server.updateCellStatus(battleId, cell.data("cell"), true);
+
+                                if (result.Data.isGameOver === true) {
+                                    bootbox.alert({
+                                        title: "Game over",
+                                        message: "You have won",
+                                        callback: function(r) {
+                                            battleHubProxy.server.sendMessageToDefeated(battleId);
+                                            //battleHubProxy.server.leaveBattle(battleId);
+                                            window.location = root + "/Chat/Index";
+                                        }
+                                    });
+                                }
+
+                                cell.off("click");
+                            }
+                        }
+                    },
+                    error: function(message) {
+                        console.log(message);
+                    }
+                });
+            });
         });
-    });
+    };
 
-    const columns = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", ""];
-
-    function addConstraints(cellPosition) {
-        let column = cellPosition.split("-")[0];
-        let row = parseInt(cellPosition.split("-")[1]);
-
-        let leftTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]}-${row - 1}"]`);
-        increaseCellCounter(leftTopCell);
-
-        let rightTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row - 1}"]`);
-        increaseCellCounter(rightTopCell);
-
-        let rightBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row + 1}"]`);
-        increaseCellCounter(rightBottomCell);
-
-        let leftBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]}-${row + 1}"]`);
-        increaseCellCounter(leftBottomCell);
-    }
-    ;
-
-    function increaseCellCounter(cell) {
-        let cellCounter = parseInt(cell.attr("data-counter"));
-        if (!isNaN(cellCounter)) {
-            cellCounter++;
-            cell.attr("data-counter", cellCounter.toString());
-            cell.find("button").addClass("disabled");
-        }
-    }
-    ;
-
-    function removeConstraints(cellPosition) {
-        let column = cellPosition.split("-")[0];
-        let row = parseInt(cellPosition.split("-")[1]);
-
-        let leftTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]}-${row - 1}"]`);
-        decreaseCellCounter(leftTopCell);
-
-        let rightTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row - 1}"]`);
-        decreaseCellCounter(rightTopCell);
-
-        let rightBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row + 1}"]`);
-        decreaseCellCounter(rightBottomCell);
-
-        let leftBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]}-${row + 1}"]`);
-        decreaseCellCounter(leftBottomCell);
-    }
-    ;
-
-    function decreaseCellCounter(cell) {
-        let cellCounter = parseInt(cell.attr("data-counter"));
-        if (!isNaN(cellCounter)) {
-            cellCounter--;
-            cell.attr("data-counter", cellCounter.toString());
-            if (cellCounter <= 0) {
-                cell.find("button").removeClass("disabled");
-            }
-        }
-    }
-    ;
-
-    const battleHubProxy = $.connection.battleHub;
-
-    battleHubProxy.client.opponentHasGivenIn = function (opponent, targetLocation) {
-        bootbox.alert({
-            title: "Game over",
-            message: `You are a winner! ${opponent} has given in.`,
-            size: "small",
-            callback: function (r) {
-                battleHubProxy.server.leaveBattle(battleId);
-                window.location = targetLocation;
-            }
-        });
-    }
-
-    $.connection.hub.start().done(function () {
-
-        battleHubProxy.server.joinBattle(battleId);
-
-        initOpponentBoard();
-        
+    function initializeControlPanel() {
         const giveInButton = $("button#js-give-in");
         const clearBoard = $("button#js-clear-board");
         const readyButton = $("button#js-ready");
@@ -132,7 +176,7 @@
                 },
                 callback: function (result) {
                     if (result) {
-                        
+
                         $.ajax({
                             url: root + "/Battle/GiveInAsync?battleId=" + battleId,
                             method: "POST",
@@ -144,7 +188,6 @@
                                         let targetLocation = data.Data;
 
                                         battleHubProxy.server.giveIn(battleId, targetLocation);
-                                        battleHubProxy.server.leaveBattle(battleId);
                                         window.location = targetLocation;
                                     }
                                 });
@@ -173,7 +216,8 @@
         });
 
         readyButton.click(function () {
-            const totalNumberOfDecks = 5 * 1 + 4 * 1 + 3 * 2 + 2 * 2 + 2 * 1;
+            //const totalNumberOfDecks = 5 * 1 + 4 * 1 + 3 * 2 + 2 * 2 + 2 * 1;
+            const totalNumberOfDecks = 5;
             let currentNumberOfDecks = parseInt($("div#player td.occupied").length);
             if (currentNumberOfDecks < totalNumberOfDecks) {
                 bootbox.alert({
@@ -187,20 +231,33 @@
                     size: "small"
                 });
             } else {
-                bootbox.dialog({
-                    message: '<div class="text-center"><i class="fa fa fa-spin fa-spinner"></i> Loading...</div>'
-                });
-
-
+                let playerBoard = loadPlayerBoard();
+                
+                if (playerBoard.length === 0) {
+                    bootbox.alert({
+                        closeButton: false,
+                        title: "Błąd",
+                        message: "<center>Wypełnij poprawnie planszę!</center>",
+                        size: "small"
+                    });
+                    return;
+                }
                 $.ajax({
-                    url: root,//TODO
-                    contentType: "application/json",
+                    url: root + "/Battle/UploadBoard",
                     method: "POST",
-                    success: function (result) {
-                        //TODO
+                    data: { battleId: battleId, board: playerBoard },
+                    beforeSend: function() {
+                        bootbox.dialog({
+                            message: '<div class="text-center"><i class="fa fa fa-spin fa-spinner"></i> Loading...</div>'
+                        });
+                    },
+                    success: function (r) {
                         bootbox.hideAll();
-                        clearBoard.closest('div').remove();
-                        readyButton.closest('div').remove();
+                        clearBoard.closest("div").remove();
+                        readyButton.closest("div").remove();
+                        uninitializePlayerBoard();
+                        initializeOpponentBoard();
+                        battleHubProxy.server.changePlayerStatusToReady(battleId);
                     },
                     error: function (message) {
                         //TODO
@@ -210,47 +267,70 @@
                         });
                     }
                 });
+                
             }
         });
+    }
+
+    function loadPlayerBoard() {
+        let result = [];
+
+        playerTable.find("td.occupied").each(function() {
+            result.push($(this).data("cell"));
+        });
+
+        if (isValidBoard(result))
+            return result.join("");
+
+        result = [];
+        return result;
+    }
+
+    function isValidBoard(board) {
+        return true;
+    }
+
+    $.connection.hub.start().done(function() {
+        battleHubProxy.server.joinBattle(battleId);
+
+        initializePlayerBoard();
+
+        initializeControlPanel();
     });
 
-    var initOpponentBoard = function () {
-        const opponentCells = $('div#opponent td.cell');
+    battleHubProxy.client.updateOpponentStatus=function() {
+        $("div#status").text("Status: ready");
+    }
 
-        opponentCells.each(function () {
-            $(this).click(function () {
-                let cell = $(this);
-                $.ajax({
-                    url: root + "/Battle/AttackAsync",
-                    method: "POST",
-                    data: { battleId: battleId, cell: $(this).data("cell") },
-                    success: function (result) {
-                        if (result.IsSuccess) {
-                            if (result.Data.isGameOver === true) {
-                                bootbox.alert({
-                                    title: "Game over",
-                                    message: "You have won",
-                                    callback: function (r) {
-                                        battleHubProxy.server.leaveBattle(battleId);
-                                        window.location = root + "/Chat/Index";
-                                    }
-                                });
-                            } else {
-                                if (result.Data.result === "missed")
-                                    cell.find("button").addClass("js-miss");
-                                else
-                                    cell.find("button").addClass("js-hit");
-
-                            }
-                            cell.off("click");
-                        }
-                    },
-                    error: function (message) {
-                        console.log(message);
-                    }
-                });
-            });
+    battleHubProxy.client.receiveMessageFromWinner = function(winner) {
+        bootbox.alert({
+            title: "Game over",
+            message: `${winner} has won the battle. Click the button to return to chat`,
+            callback: function(r) {
+                window.location = root + "/Chat/Index";
+            }
         });
+    }
+
+    battleHubProxy.client.opponentHasGivenIn = function (opponent, targetLocation) {
+        bootbox.alert({
+            title: "Game over",
+            message: `You are a winner! ${opponent} has given in.`,
+            size: "small",
+            callback: function (r) {
+                //battleHubProxy.server.leaveBattle(battleId);
+                window.location = targetLocation;
+            }
+        });
+    }
+
+    battleHubProxy.client.updateCellStatus= function(cell, isHitted) {
+        let playerButton = playerTable.find(`td[data-cell="${cell}"]`).find("button");
+
+        if (isHitted)
+            playerButton.addClass("js-hit");
+        else
+            playerButton.addClass("js-miss");
     }
 });
 

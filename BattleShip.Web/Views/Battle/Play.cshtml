@@ -34,7 +34,11 @@
         <div class="col-xs-12 col-md-6" id="opponent">
             <div class="panel-heading">
                 <div class="well well-sm no-margin">
-                    Opponent: @Model.Opponent
+                    <div class="row text-left">
+                        <div class="col-xs-4">Opponent: @Model.Opponent</div>
+                        <div class="col-xs-4" id="status">Status: ...</div>
+                        <div class="col-xs-4" id="action"></div>
+                    </div>
                 </div>
             </div>
             <div class="panel-body">

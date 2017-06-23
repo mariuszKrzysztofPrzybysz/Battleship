@@ -54,7 +54,7 @@ namespace BattleShip.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Attack(long battleId, string cell)
+        public async Task<ActionResult> AttackAsync(long battleId, string cell)
         {
             var attackerName = User.Identity.Name;
 
