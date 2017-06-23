@@ -34,7 +34,7 @@
             var newPlayer = $(`<li class="list-group-item" data-player-name="`+sender+`">
                                     <div class="media">
                                         <div class="media-left">
-                                            <img src="/Content/Images/Photos/`+sender+`.jpg" class="img-rounded" alt="`+sender+`" width="50" height="50">
+                                            <img src="Content/Images/Photos/`+sender+`.jpg" class="img-rounded" alt="`+sender+`" width="50" height="50">
                                         </div>
                                         <div class="media-body">
                                             <h4 class="media-heading">`+sender+`</h4>
@@ -113,7 +113,7 @@
     chatHubProxy.client.receiveInvitationToBattle = function (playerName) {
         bootbox.confirm({
             title: `Gracz ${playerName} wyzywa cię na bitwę. Podejmiesz wyzwanie?`,
-            message: `<center><img src="Content/Images/battle.jpg" class="img-rounded" alt="battle" width="100%"></center>`,
+            message: `<center><img src="/Content/Images/battle.jpg" class="img-rounded" alt="battle" width="100%"></center>`,
             buttons: {
                 cancel: {
                     label: '<i class="fa fa-times"></i> Nie'
