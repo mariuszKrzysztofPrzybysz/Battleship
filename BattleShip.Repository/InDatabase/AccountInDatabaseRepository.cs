@@ -45,8 +45,8 @@ namespace BattleShip.Repository.InDatabase
                 FirstName = viewModel.FirstName ?? string.Empty,
                 LastName = viewModel.LastName ?? string.Empty,
                 Gender = viewModel.Gender,
-                AllowNewBattle = viewModel.AllowNewBattle,
-                AllowPrivateChat = viewModel.AllowPrivateChat
+                AllowNewBattle = true,
+                AllowPrivateChat = true
             };
 
             _context.Accounts.Add(account);

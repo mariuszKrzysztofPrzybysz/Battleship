@@ -32,14 +32,6 @@ namespace BattleShip.Repository.ViewModels
         [Required]
         [Display(Name = "Gender")]
         public Gender Gender { get; set; }
-
-        [Required]
-        [Display(Name = "Allow new battle")]
-        public bool AllowNewBattle { get; set; }
-
-        [Required]
-        [Display(Name = "Allow private chat")]
-        public bool AllowPrivateChat { get; set; }
     }
 
     public class AccountDetailsViewModel
