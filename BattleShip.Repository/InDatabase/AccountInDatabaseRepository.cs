@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
 using BattleShip.Database;
@@ -169,6 +171,77 @@ namespace BattleShip.Repository.InDatabase
             catch (Exception ex)
             {
                 return new Result {IsSuccess = false, ErrorMessage = ex.Message};
+            }
+        }
+
+        public async Task<Result> UpdateAccountAsync(EditAccountViewModel viewModel)
+        {
+            try
+            {
+                var accountInDatabase = await _context.Accounts
+                    .SingleOrDefaultAsync(a => a.AccountId == viewModel.AccountId);
+
+                if (accountInDatabase == null)
+                    return new Result {ErrorMessage = "Skontaktuj się z administratorem."};
+
+                accountInDatabase.EmailAddress = viewModel.EmailAddress;
+                accountInDatabase.FirstName = viewModel.FirstName;
+                accountInDatabase.LastName = viewModel.LastName;
+                accountInDatabase.AllowNewBattle = viewModel.AllowNewBattle;
+                accountInDatabase.AllowPrivateChat = viewModel.AllowPrivateChat;
+                accountInDatabase.Photo = viewModel.Photo;
+
+                await _context.SaveChangesAsync();
+
+                return new Result {IsSuccess = true};
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return new Result {ErrorMessage = ex.Message};
+            }
+            catch (DbEntityValidationException ex)
+            {
+                return new Result {ErrorMessage = ex.Message};
+            }
+            catch (DbUpdateException ex)
+            {
+                return new Result {ErrorMessage = ex.Message};
+            }
+            catch (NotSupportedException ex)
+            {
+                return new Result {ErrorMessage = ex.Message};
+            }
+            catch (ObjectDisposedException ex)
+            {
+                return new Result {ErrorMessage = ex.Message};
+            }
+            catch (InvalidOperationException ex)
+            {
+                return new Result {ErrorMessage = ex.Message};
+            }
+            catch (Exception)
+            {
+                return new Result
+                {
+                    ErrorMessage =
+                        "Wystąpił błąd związany z siecią lub wystąpieniem podczas ustanawiania połączenia z serwerem programu SQL Server. Nie można odnaleźć serwera lub jest on niedostępny."
+                };
+            }
+        }
+
+        public async Task<Account> GetAccountAsync(string login)
+        {
+            try
+            {
+                var accountInDatabase = await _context.Accounts
+                    .SingleOrDefaultAsync(a =>
+                        a.Login.Equals(login, StringComparison.OrdinalIgnoreCase));
+
+                return accountInDatabase;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
     }

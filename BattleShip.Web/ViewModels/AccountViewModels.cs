@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Web;
 using BattleShip.Repository.ViewModels;
 
 namespace BattleShip.Web.ViewModels
@@ -22,5 +23,12 @@ namespace BattleShip.Web.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
+    }
+
+    public class ExtendedEditAccountViewModel : EditAccountViewModel
+    {
+        [DataType(DataType.Upload)]
+        [Display(Name = "Photo")]
+        public HttpPostedFileBase AccountPhoto { get; set; }
     }
 }
