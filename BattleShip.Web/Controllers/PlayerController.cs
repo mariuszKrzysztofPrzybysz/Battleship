@@ -83,7 +83,7 @@ namespace BattleShip.Web.Controllers
                 return View(model);
             }
 
-            return RedirectToAction("Index");
+            return View(model);
         }
 
         [ActionName("Details")]
