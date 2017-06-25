@@ -193,6 +193,7 @@
     <Content Include="Content\Images\anonymous.jpg" />
     <Content Include="Content\Images\battle.jpg" />
     <Content Include="Content\Images\hit.jpg" />
+    <Content Include="Content\Images\logo.jpg" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\miss.jpg" />
     <Content Include="Content\Images\Photos\ifajka.jpg" />
@@ -267,6 +268,7 @@
     <Content Include="Views\Battle\Play.cshtml" />
     <Content Include="Views\Player\Edit.cshtml" />
     <Content Include="Views\Player\Details.cshtml" />
+    <Content Include="Views\Shared\_PlayerLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
