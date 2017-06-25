@@ -189,7 +189,8 @@ namespace BattleShip.Repository.InDatabase
                 accountInDatabase.LastName = viewModel.LastName;
                 accountInDatabase.AllowNewBattle = viewModel.AllowNewBattle;
                 accountInDatabase.AllowPrivateChat = viewModel.AllowPrivateChat;
-                accountInDatabase.Photo = viewModel.Photo;
+                if (viewModel.Photo != null)
+                    accountInDatabase.Photo = viewModel.Photo;
 
                 await _context.SaveChangesAsync();
 
