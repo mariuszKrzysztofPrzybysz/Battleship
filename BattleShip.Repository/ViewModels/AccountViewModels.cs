@@ -54,7 +54,7 @@ namespace BattleShip.Repository.ViewModels
         [Display(Name = "Gender")]
         public string Gender { get; set; }
 
-        [Display(Name = "Allow new battle")]
+        [Display(Name = "Allow battle")]
         public string AllowNewBattle { get; set; }
 
         [Display(Name = "Allow private chat")]

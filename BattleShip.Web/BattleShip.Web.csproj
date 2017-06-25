@@ -188,6 +188,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Images\anonymous.jpg" />
     <Content Include="Content\Images\battle.jpg" />
     <Content Include="Content\Images\hit.jpg" />
     <Content Include="Content\Images\logo.png" />
@@ -263,6 +264,7 @@
     <Content Include="Views\Chat\Index.cshtml" />
     <Content Include="Views\Battle\Play.cshtml" />
     <Content Include="Views\Player\Edit.cshtml" />
+    <Content Include="Views\Player\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

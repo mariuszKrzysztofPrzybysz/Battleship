@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
+using BattleShip.Database.Entities;
 using BattleShip.Repository.Interfaces;
 using BattleShip.Repository.ViewModels;
-using BattleShip.Web.Attributes;
 using BattleShip.Web.ViewModels;
 
 namespace BattleShip.Web.Controllers
@@ -87,6 +84,31 @@ namespace BattleShip.Web.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        [ActionName("Details")]
+        public async Task<ActionResult> DetailsAsync()
+        {
+            var login = User.Identity.Name;
+
+            var accountInDatabase = await _accountRepository.GetAccountAsync(login);
+
+            if (accountInDatabase == null)
+                return RedirectToAction("Index");
+
+            var model = new AccountDetailsViewModel
+            {
+                Login = accountInDatabase.Login,
+                EmailAddress = accountInDatabase.EmailAddress,
+                FirstName = accountInDatabase.FirstName,
+                LastName = accountInDatabase.LastName,
+                Photo = accountInDatabase.Photo,
+                Gender = Enum.GetName(typeof(Gender), accountInDatabase.Gender),
+                AllowNewBattle = accountInDatabase.AllowNewBattle ? "Yes" : "No",
+                AllowPrivateChat = accountInDatabase.AllowPrivateChat ? "Yes" : "No"
+            };
+
+            return View(model);
         }
     }
 }
