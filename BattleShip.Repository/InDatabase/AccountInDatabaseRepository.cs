@@ -146,9 +146,11 @@ namespace BattleShip.Repository.InDatabase
             }
         }
 
-        public async Task<IEnumerable<AccountPermissionsViewModel>> GetOnlinePlayersExcept(string login)
-        {            
-            var result = await _context.Accounts
+        public async Task<IEnumerable<AccountPermissionsViewModel>> GetAllOnlinePlayersExceptAsync(string login)
+        {
+            try
+            {
+                var result = await _context.Accounts
                 .Where(a => a.IsOnChatWebPage
                             && !a.Login.Equals(login, StringComparison.OrdinalIgnoreCase))
                 .Select(a => new AccountPermissionsViewModel
@@ -159,7 +161,13 @@ namespace BattleShip.Repository.InDatabase
                 })
                 .ToListAsync();
 
-            return  result;
+                return result;
+            }
+            catch
+            {
+                return new List<AccountPermissionsViewModel>();
+            }
+            
         }
 
         public async Task<AccountPermissionsViewModel> EnterChatWebPage(string accountName)

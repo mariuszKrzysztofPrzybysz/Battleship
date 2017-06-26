@@ -6,11 +6,11 @@ namespace BattleShip.Web.Controllers
 {
     public class ChatController : Controller
     {
-        private readonly IAccountRepository _repository;
+        private readonly IAccountRepository _accountRepository;
 
-        public ChatController(IAccountRepository repository)
+        public ChatController(IAccountRepository accountRepository)
         {
-            _repository = repository;
+            _accountRepository = accountRepository;
         }
 
         // GET: Chat
@@ -18,7 +18,7 @@ namespace BattleShip.Web.Controllers
         {
             var accountName = User.Identity.Name;
 
-            var viewModel = await _repository.GetOnlinePlayersExcept(accountName);
+            var viewModel = await _accountRepository.GetAllOnlinePlayersExceptAsync(accountName);
 
             return View(viewModel);
         }
