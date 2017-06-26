@@ -25,7 +25,7 @@ namespace BattleShip.Repository.InDatabase
             _context = context;
         }
 
-        public async Task<Result> RegisterAsync(AddAccountViewModel viewModel)
+        public async Task<Result> SignUpAsync(AddAccountViewModel viewModel)
         {
             try
             {

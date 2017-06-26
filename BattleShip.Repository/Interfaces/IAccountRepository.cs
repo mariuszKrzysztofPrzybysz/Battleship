@@ -9,7 +9,7 @@ namespace BattleShip.Repository.Interfaces
 {
     public interface IAccountRepository
     {
-        Task<Result> RegisterAsync(AddAccountViewModel viewModel);
+        Task<Result> SignUpAsync(AddAccountViewModel viewModel);
 
         Task<Result> AuthenticateAccountAsync(string login, string password);
 

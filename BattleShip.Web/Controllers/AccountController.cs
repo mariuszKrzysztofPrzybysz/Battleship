@@ -42,7 +42,7 @@ namespace BattleShip.Web.Controllers
                 return View(viewModel);
             }
 
-            var result = await _accountRepository.RegisterAsync(viewModel);
+            var result = await _accountRepository.SignUpAsync(viewModel);
 
             if (!result.IsSuccess)
             {
