@@ -7,6 +7,6 @@ namespace BattleShip.Repository.Interfaces
 {
     public interface IAccountRoleRepository
     {
-        Task<IEnumerable<Role>> GetAccountRoles(string login);
+        Task<IEnumerable<Role>> GetAccountRolesAsync(string login);
     }
 }

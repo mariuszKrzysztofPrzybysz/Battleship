@@ -93,9 +93,9 @@ namespace BattleShip.Web.Controllers
         {
             FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
 
-            var rolesList = await _accountRoleRepository.GetAccountRoles(userName);
+            var rolesListInDatabaseForAccount = await _accountRoleRepository.GetAccountRolesAsync(userName);
             
-            Session.Add("Roles", rolesList);
+            Session.Add("Roles", rolesListInDatabaseForAccount);
         }
     }
 }

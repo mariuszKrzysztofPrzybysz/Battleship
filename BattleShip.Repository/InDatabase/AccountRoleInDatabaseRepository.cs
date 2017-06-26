@@ -18,7 +18,7 @@ namespace BattleShip.Repository.InDatabase
             _context = context;
         }
 
-        public async Task<IEnumerable<Role>> GetAccountRoles(string login)
+        public async Task<IEnumerable<Role>> GetAccountRolesAsync(string login)
         {
             return await _context.Roles
                 .Where(r =>
