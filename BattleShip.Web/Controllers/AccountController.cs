@@ -14,12 +14,12 @@ namespace BattleShip.Web.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly IAccountRepository _repository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IAccountRoleRepository _accountRoleRepository;
 
         public AccountController(IAccountRepository repository, IAccountRoleRepository accountRoleRepository)
         {
-            _repository = repository;
+            _accountRepository = repository;
             _accountRoleRepository = accountRoleRepository;
         }
 
@@ -44,7 +44,7 @@ namespace BattleShip.Web.Controllers
                 return View(viewModel);
             }
 
-            var result = await _repository.RegisterAsync(viewModel);
+            var result = await _accountRepository.RegisterAsync(viewModel);
 
             if (!result.IsSuccess)
             {
@@ -71,7 +71,7 @@ namespace BattleShip.Web.Controllers
             if (!ModelState.IsValid)
                 return View();
 
-            var authenticatedAccount = await _repository
+            var authenticatedAccount = await _accountRepository
                 .AuthenticateAccount(viewModel.Login, viewModel.Password);
 
             if (!authenticatedAccount.IsSuccess)
