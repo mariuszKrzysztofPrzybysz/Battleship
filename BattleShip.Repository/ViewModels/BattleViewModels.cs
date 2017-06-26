@@ -26,4 +26,22 @@ namespace BattleShip.Repository.ViewModels
 
         public string Opponent { get; set; }
     }
+
+    public class PlayerBattlesViewModel
+    {
+        [Display(Name = "Id")]
+        public long BattleId { get; set; }
+
+        public string Player { get; set; }
+
+        public string Opponent { get; set; }
+
+        [Display(Name="UTC start date and time")]
+        public DateTime StartUtcDateTime { get; set; }
+
+        [Display(Name = "Duration (in seconds)")]
+        public int? Duration { get; set; }
+
+        public string Winner { get; set; }
+    }
 }

@@ -6,7 +6,7 @@
 <script src="~/Scripts/chat.js"></script>
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_PlayerLayout.cshtml";
 }
 <style>
     * {
@@ -68,7 +68,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="search-input" placeholder="Szukaj...">
+                            <input type="text" class="form-control" id="search-input" style="max-width: 100% !important;" placeholder="Szukaj...">
                             <div class="input-group-btn">
                                 <button class="btn btn-default" id="search-button" type="button">
                                     <i class="glyphicon glyphicon-search"></i>
@@ -107,10 +107,14 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="input-group">
-                            <input type="text" class="form-control" id="message-input" placeholder="Napisz wiadomość...">
+                            <input type="text" class="form-control" style="max-width: 100% !important;" id="message-input" placeholder="Napisz wiadomość...">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" id="send-button" type="button">
+                                    <i class="glyphicon glyphicon-send"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-
                     <div class="panel-body">
                         <div id="js-tab-pane-container" class="tab-content">
                             <ul class="nav nav-tabs" id="js-nav-tabs">

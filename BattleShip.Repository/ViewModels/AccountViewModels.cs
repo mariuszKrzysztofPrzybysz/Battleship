@@ -34,33 +34,6 @@ namespace BattleShip.Repository.ViewModels
         public Gender Gender { get; set; }
     }
 
-    public class AccountDetailsViewModel
-    {
-        [Display(Name = "Login")]
-        public string Login { get; set; }
-
-        [Display(Name = "Email address")]
-        public string EmailAddress { get; set; }
-
-        [Display(Name = "First name")]
-        public string FirstName { get; set; }
-
-        [Display(Name = "Last name")]
-        public string LastName { get; set; }
-
-        [Display(Name = "Photo")]
-        public byte[] Photo { get; set; }
-
-        [Display(Name = "Gender")]
-        public string Gender { get; set; }
-
-        [Display(Name = "Allow battle")]
-        public string AllowNewBattle { get; set; }
-
-        [Display(Name = "Allow private chat")]
-        public string AllowPrivateChat { get; set; }
-    }
-
     public class EditAccountViewModel
     {
         [Required]

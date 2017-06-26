@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using BattleShip.Database.Entities;
 using BattleShip.Repository.Interfaces;
 using BattleShip.Repository.ViewModels;
@@ -12,10 +13,12 @@ namespace BattleShip.Web.Controllers
     public class PlayerController : Controller
     {
         private readonly IAccountRepository _accountRepository;
+        private readonly IPlayerRepository _playerRepository;
 
-        public PlayerController(IAccountRepository accountRepository)
+        public PlayerController(IAccountRepository accountRepository, IPlayerRepository playerRepository)
         {
             _accountRepository = accountRepository;
+            _playerRepository = playerRepository;
         }
 
         // GET: Player
@@ -86,29 +89,14 @@ namespace BattleShip.Web.Controllers
             return RedirectToAction("Index", "Player");
         }
 
-        [ActionName("Details")]
-        public async Task<ActionResult> DetailsAsync()
+        [ActionName("Battles")]
+        public async Task<ActionResult> BattlesAsync()
         {
             var login = User.Identity.Name;
 
-            var accountInDatabase = await _accountRepository.GetAccountAsync(login);
+            var battles = await _playerRepository.GetPlayerBattles(login);
 
-            if (accountInDatabase == null)
-                return RedirectToAction("Index");
-
-            var model = new AccountDetailsViewModel
-            {
-                Login = accountInDatabase.Login,
-                EmailAddress = accountInDatabase.EmailAddress,
-                FirstName = accountInDatabase.FirstName,
-                LastName = accountInDatabase.LastName,
-                Photo = accountInDatabase.Photo,
-                Gender = Enum.GetName(typeof(Gender), accountInDatabase.Gender),
-                AllowNewBattle = accountInDatabase.AllowNewBattle ? "Yes" : "No",
-                AllowPrivateChat = accountInDatabase.AllowPrivateChat ? "Yes" : "No"
-            };
-
-            return View(model);
+            return View(battles);
         }
     }
 }

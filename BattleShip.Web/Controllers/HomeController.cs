@@ -14,7 +14,7 @@ namespace BattleShip.Web.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Rules()
         {
             ViewBag.Message = "Your application description page.";
 
