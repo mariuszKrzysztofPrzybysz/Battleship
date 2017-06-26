@@ -57,9 +57,7 @@ namespace BattleShip.Web.Controllers
 
         public ActionResult SignIn()
         {
-            var viewModel=new SignInAccountViewModel();
-
-            return View(viewModel);
+            return View();
         }
 
         [HttpPost]
