@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -17,8 +18,6 @@ namespace BattleShip.Repository.InDatabase
 {
     public class AccountInDatabaseRepository : IAccountRepository
     {
-        private const string DefaultRoleForAccount = "player";
-
         private readonly BattleShipContext _context;
 
         public AccountInDatabaseRepository(BattleShipContext context)
@@ -34,6 +33,8 @@ namespace BattleShip.Repository.InDatabase
                 {
                     try
                     {
+                        const string defaultRoleForNewAccount = "player";
+
                         var isAccountExistsInDatabase = await _context.Accounts
                             .AnyAsync(a => a.Login.Equals(viewModel.Login, StringComparison.OrdinalIgnoreCase));
 
@@ -70,7 +71,7 @@ namespace BattleShip.Repository.InDatabase
 
                         var defaultPlayerRoleForNewAccountInDatabase
                             = await _context.Roles.SingleAsync(r
-                                => r.Name.Equals(DefaultRoleForAccount, StringComparison.OrdinalIgnoreCase));
+                                => r.Name.Equals(defaultRoleForNewAccount, StringComparison.OrdinalIgnoreCase));
 
                         var newAccountRole = new AccountRole
                         {
@@ -115,22 +116,34 @@ namespace BattleShip.Repository.InDatabase
             }
         }
 
-        public async Task<Result> AuthenticateAccount(string login, string password)
+        public async Task<Result> AuthenticateAccountAsync(string login, string password)
         {
             var hashedPassword = PasswordHelper.GetSha512CngPasswordHash(password);
 
-            var account = await _context.Accounts
-                .SingleOrDefaultAsync(p =>
-                    p.Login.Equals(login, StringComparison.OrdinalIgnoreCase)
-                    && p.Password == hashedPassword);
+            try
+            {
+                var accountInDatabase = await _context.Accounts
+                    .SingleOrDefaultAsync(p =>
+                        p.Login.Equals(login, StringComparison.OrdinalIgnoreCase)
+                        && p.Password == hashedPassword);
 
-            return account == null
-                ? new Result
+                return accountInDatabase == null
+                    ? new Result
+                    {
+                        ErrorMessage = "Wprowadzony adres e-mail lub hasło nie pasuje do żadnego konta"
+                    }
+                    : new Result {IsSuccess = true};
+            }
+            catch
+            {
+                return new Result
                 {
-                    IsSuccess = false,
-                    ErrorMessage = "Wprowadzony adres e-mail lub hasło nie pasuje do żadnego konta"
-                }
-                : new Result {IsSuccess = true};
+                    ErrorMessage =
+                        "Wystąpił błąd związany z siecią lub wystąpieniem podczas ustanawiania połączenia z serwerem programu SQL Server. " +
+                        "Nie można odnaleźć serwera lub jest on niedostępny. " +
+                        "Sprawdź, czy nazwa wystąpienia jest poprawna i czy konfiguracja serwera programu SQL Server zezwala na połączenia zdalne."
+                };
+            }
         }
 
         public async Task<IEnumerable<AccountPermissionsViewModel>> GetOnlinePlayersExcept(string login)

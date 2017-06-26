@@ -11,7 +11,7 @@ namespace BattleShip.Repository.Interfaces
     {
         Task<Result> RegisterAsync(AddAccountViewModel viewModel);
 
-        Task<Result> AuthenticateAccount(string login, string password);
+        Task<Result> AuthenticateAccountAsync(string login, string password);
 
         Task<IEnumerable<AccountPermissionsViewModel>> GetOnlinePlayersExcept(string login);
 

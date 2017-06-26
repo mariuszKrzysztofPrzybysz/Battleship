@@ -50,7 +50,7 @@ namespace BattleShip.Web.Controllers
                 return View(viewModel);
             }
 
-            await SetAuthCookieAndAddSession(viewModel.Login.ToLower(), true);
+            await SetAuthCookieAndAddSessionAsync(viewModel.Login.ToLower(), true);
 
             return RedirectToAction("Index", "Home");
         }
@@ -60,15 +60,16 @@ namespace BattleShip.Web.Controllers
             return View();
         }
 
+        [ActionName("SignIn")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SignIn(SignInAccountViewModel viewModel)
+        public async Task<ActionResult> SignInAsync(SignInAccountViewModel viewModel)
         {
             if (!ModelState.IsValid)
                 return View();
 
             var authenticatedAccount = await _accountRepository
-                .AuthenticateAccount(viewModel.Login, viewModel.Password);
+                .AuthenticateAccountAsync(viewModel.Login, viewModel.Password);
 
             if (!authenticatedAccount.IsSuccess)
             {
@@ -76,7 +77,8 @@ namespace BattleShip.Web.Controllers
                 return View();
             }
 
-            await SetAuthCookieAndAddSession(viewModel.Login.ToLower(), true);
+            await SetAuthCookieAndAddSessionAsync(viewModel.Login.ToLower(), true);
+
             return RedirectToAction("Index", "Player");
         }
 
@@ -87,7 +89,7 @@ namespace BattleShip.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        private async Task SetAuthCookieAndAddSession(string userName, bool createPersistentCookie)
+        private async Task SetAuthCookieAndAddSessionAsync(string userName, bool createPersistentCookie)
         {
             FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
 
