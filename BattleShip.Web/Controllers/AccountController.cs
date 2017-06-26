@@ -31,9 +31,10 @@ namespace BattleShip.Web.Controllers
             return View(viewModel);
         }
 
+        [ActionName("SignUp")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SignUp(SignUpAccountViewModel viewModel)
+        public async Task<ActionResult> SignUpAsync(SignUpAccountViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -43,14 +44,12 @@ namespace BattleShip.Web.Controllers
                 return View(viewModel);
             }
 
-            var result = await _repository.Add(viewModel);
+            var result = await _repository.RegisterAsync(viewModel);
 
             if (!result.IsSuccess)
             {
-                //TODO: Poinformować o błędzie
-                //throw new NotImplementedException();
                 ModelState.AddModelError(string.Empty, result.ErrorMessage);
-                return View();
+                return View(viewModel);
             }
 
             await SetAuthCookieAndAddSession(viewModel.Login.ToLower(), true);

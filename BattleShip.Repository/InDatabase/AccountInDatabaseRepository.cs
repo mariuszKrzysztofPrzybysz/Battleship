@@ -4,7 +4,9 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Transactions;
 using BattleShip.Database;
 using BattleShip.Database.Entities;
 using BattleShip.Repository.Interfaces;
@@ -15,6 +17,8 @@ namespace BattleShip.Repository.InDatabase
 {
     public class AccountInDatabaseRepository : IAccountRepository
     {
+        private const string DefaultRoleForAccount = "player";
+
         private readonly BattleShipContext _context;
 
         public AccountInDatabaseRepository(BattleShipContext context)
@@ -22,71 +26,93 @@ namespace BattleShip.Repository.InDatabase
             _context = context;
         }
 
-        public async Task<Result> Add(AddAccountViewModel viewModel)
+        public async Task<Result> RegisterAsync(AddAccountViewModel viewModel)
         {
-            var isExistsAccountInDatabase = await _context.Accounts
-                .AnyAsync(a => a.Login.Equals(viewModel.Login, StringComparison.OrdinalIgnoreCase));
+            try
+            {
+                using (var transacion = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var isAccountExistsInDatabase = await _context.Accounts
+                            .AnyAsync(a => a.Login.Equals(viewModel.Login, StringComparison.OrdinalIgnoreCase));
 
-            if (isExistsAccountInDatabase)
+                        if (isAccountExistsInDatabase)
+                            return new Result
+                            {
+                                ErrorMessage =
+                                    $"Ta nazwa użytkownika jest już zajęta. " +
+                                    $"Pamiętaj, że w nazwach użytkowników ignorujemy kropki " +
+                                    $"i nie rozróżniamy wielkości liter. Chcesz podać inną nazwę?"
+                            };
+
+                        var hashedPassword = PasswordHelper.GetSha512CngPasswordHash(viewModel.Password);
+
+                        var newAccount = new Account
+                        {
+                            Login = viewModel.Login,
+                            Password = hashedPassword,
+                            EmailAddress = viewModel.EmailAddress,
+                            FirstName = viewModel.FirstName ?? string.Empty,
+                            LastName = viewModel.LastName ?? string.Empty,
+                            Gender = viewModel.Gender,
+                            AllowNewBattle = true,
+                            AllowPrivateChat = true
+                        };
+
+                        _context.Accounts.Add(newAccount);
+
+                        var numberOfAccountsWrittenToUnderlyingDatabase
+                            = await _context.SaveChangesAsync();
+
+                        if (numberOfAccountsWrittenToUnderlyingDatabase == 0)
+                            return new Result {ErrorMessage = "Nie utworzono konta użytkownika"};
+
+                        var defaultPlayerRoleForNewAccountInDatabase
+                            = await _context.Roles.SingleAsync(r
+                                => r.Name.Equals(DefaultRoleForAccount, StringComparison.OrdinalIgnoreCase));
+
+                        var newAccountRole = new AccountRole
+                        {
+                            AccountId = newAccount.AccountId,
+                            RoleId = defaultPlayerRoleForNewAccountInDatabase.RoleId
+                        };
+
+                        _context.AccountRoles.Add(newAccountRole);
+
+                        var numberOfAccountRolesWrittenToUnderlyingDatabase
+                            = await _context.SaveChangesAsync();
+
+                        if (numberOfAccountRolesWrittenToUnderlyingDatabase == 0)
+                        {
+                            transacion.Rollback();
+                            return new Result
+                            {
+                                ErrorMessage =
+                                    "Nie znaleziono domyślnej roli dla użytkownika. Skontaktuj się z administratorem"
+                            };
+                        }
+
+                        transacion.Commit();
+                        return new Result {IsSuccess = true};
+                    }
+                    catch (Exception)
+                    {
+                        transacion.Rollback();
+                        return new Result {ErrorMessage = "Nie utworzono konta użytkownika"};
+                    }
+                }
+            }
+            catch
+            {
                 return new Result
                 {
-                    IsSuccess = false,
                     ErrorMessage =
-                        $"Ta nazwa użytkownika jest już zajęta. " +
-                        $"Pamiętaj, że w nazwach użytkowników ignorujemy kropki " +
-                        $"i nie rozróżniamy wielkości liter. Chcesz podać inną nazwę?"
+                        "Wystąpił błąd związany z siecią lub wystąpieniem podczas ustanawiania połączenia z serwerem programu SQL Server. " +
+                        "Nie można odnaleźć serwera lub jest on niedostępny. " +
+                        "Sprawdź, czy nazwa wystąpienia jest poprawna i czy konfiguracja serwera programu SQL Server zezwala na połączenia zdalne."
                 };
-
-            var hashedPassword = PasswordHelper.GetSha512CngPasswordHash(viewModel.Password);
-
-            var account = new Account
-            {
-                Login = viewModel.Login,
-                Password = hashedPassword,
-                EmailAddress = viewModel.EmailAddress,
-                FirstName = viewModel.FirstName ?? string.Empty,
-                LastName = viewModel.LastName ?? string.Empty,
-                Gender = viewModel.Gender,
-                AllowNewBattle = true,
-                AllowPrivateChat = true
-            };
-
-            _context.Accounts.Add(account);
-            await _context.SaveChangesAsync();
-            var accountId = account.AccountId;
-
-            if (accountId <= 0)
-                return new Result
-                {
-                    IsSuccess = false,
-                    ErrorMessage = "Nie utworzono konta użytkownika"
-                };
-
-            //TODO: Replace magic string with ...
-            var playerRole = await _context.Roles
-                .SingleAsync(r => r.Name.Equals("Player",
-                    StringComparison.OrdinalIgnoreCase));
-
-            var playerRoleId = playerRole.RoleId;
-
-            var accountRole = new AccountRole
-            {
-                AccountId = accountId,
-                RoleId = playerRoleId
-            };
-
-            _context.AccountRoles.Add(accountRole);
-            await _context.SaveChangesAsync();
-            var accountRoleId = accountRole.AccountRoleId;
-
-            if (accountRoleId > 0)
-                return new Result {IsSuccess = true};
-
-            return new Result
-            {
-                IsSuccess = false,
-                ErrorMessage = "Nie utworzono roli dla użytkownika"
-            };
+            }
         }
 
         public async Task<Result> AuthenticateAccount(string login, string password)
