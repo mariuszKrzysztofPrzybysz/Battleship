@@ -26,9 +26,7 @@ namespace BattleShip.Web.Controllers
         // GET: Account
         public ActionResult SignUp()
         {
-            var viewModel = new SignUpAccountViewModel();
-
-            return View(viewModel);
+            return View();
         }
 
         [ActionName("SignUp")]
