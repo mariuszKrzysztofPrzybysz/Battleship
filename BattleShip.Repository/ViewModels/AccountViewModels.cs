@@ -8,6 +8,7 @@ namespace BattleShip.Repository.ViewModels
     {
         [Required]
         [Index(IsUnique = true)]
+        [MinLength(5)]
         [MaxLength(50)]
         public string Login { get; set; }
 
