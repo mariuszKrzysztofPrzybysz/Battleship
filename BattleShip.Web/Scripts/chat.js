@@ -14,7 +14,8 @@
             message: "Kliknij, aby przejść na nową stronę",
             size: "small",
             callback: function() {
-                window.open(targetPage);
+                //window.open(targetPage);
+                window.location = targetPage;
             }
         });
     }
@@ -130,7 +131,7 @@
                         data: { playerName: playerName },
                         success: function(result) {
                             if (result.IsSuccess === true) {
-                                chatHubProxy.server.redirectToBattleWebPage(playerName, result.Data.Id);
+                                chatHubProxy.server.redirectToBattleWebPage(playerName, result.Data.battleId);
                             }
                         },
                         error: function(message) {

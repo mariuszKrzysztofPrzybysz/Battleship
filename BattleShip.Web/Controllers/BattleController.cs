@@ -30,11 +30,11 @@ namespace BattleShip.Web.Controllers
         }
 
         [ActionName("Play")]
-        public async Task<ActionResult> PlayAsync(long id)
+        public async Task<ActionResult> PlayAsync(long battleId)
         {
             var playerName = User.Identity.Name;
 
-            var access = await _battleRepository.CheckAccessAsync(id, playerName);
+            var access = await _battleRepository.CheckAccessAsync(battleId, playerName);
 
             if (!access.IsSuccess)
                 return RedirectToAction("Index", "Player");

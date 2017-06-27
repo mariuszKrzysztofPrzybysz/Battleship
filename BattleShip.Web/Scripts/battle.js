@@ -2,7 +2,7 @@
     const battleHubProxy = $.connection.battleHub;
 
     const root = window.location.origin;
-    const battleId = getUrlParameter("id");
+    const battleId = getUrlParameter("battleId");
 
     const playerTable = $("div#player table");
     const opponentTable = $("div#opponent table");
@@ -142,7 +142,6 @@
                                         message: "You have won",
                                         callback: function(r) {
                                             battleHubProxy.server.sendMessageToDefeated(battleId);
-                                            //battleHubProxy.server.leaveBattle(battleId);
                                             window.location = root + "/Chat/Index";
                                         }
                                     });
@@ -161,7 +160,7 @@
     };
 
     function uninitializeOpponentBoard() {
-        opponentTable.find("td.cell").off('click');
+        opponentTable.find("td.cell").off("click");
     }
 
     function initializeControlPanel() {
@@ -183,10 +182,10 @@
                 },
                 callback: function (result) {
                     if (result) {
-
                         $.ajax({
-                            url: root + "/Battle/GiveInAsync?battleId=" + battleId,
+                            url: root + "/Battle/GiveInAsync",
                             method: "POST",
+                            data: {battleId: battleId},
                             success: function (data) {
                                 bootbox.alert({
                                     title: "Game over",
@@ -258,7 +257,8 @@
                             message: '<div class="text-center"><i class="fa fa fa-spin fa-spinner"></i> Loading...</div>'
                         });
                     },
-                    success: function (r) {
+                    success: function (result) {
+                        console.log(r.Data);
                         bootbox.hideAll();
                         clearBoard.closest("div").remove();
                         readyButton.closest("div").remove();

@@ -44,10 +44,11 @@ namespace BattleShip.Repository.InDatabase
                     Attacker = opponent.AccountId
                 };
 
-                //var newBattle = _context.Battles.Add(battle);
+                _context.Battles.Add(battle);
+                await _context.SaveChangesAsync();
 
-                if (await _context.SaveChangesAsync() > 0)
-                    return new Result {IsSuccess = true, Data = new {Id = battle.BattleId}};
+                if (battle.BattleId > 0)
+                    return new Result {IsSuccess = true, Data = new {battleId = battle.BattleId}};
 
                 return new Result();
             }
@@ -83,11 +84,9 @@ namespace BattleShip.Repository.InDatabase
                     .SingleOrDefaultAsync(b => !b.WinnerId.HasValue
                                                && b.BattleId == battleId
                                                &&
-                                               (b.Player.Login.Equals(userName, StringComparison.OrdinalIgnoreCase) &&
-                                                b.PlayerIsReady == false
+                                               (b.Player.Login.Equals(userName, StringComparison.OrdinalIgnoreCase)
                                                 ||
-                                                b.Opponent.Login.Equals(userName, StringComparison.OrdinalIgnoreCase) &&
-                                                b.OpponentIsReady == false));
+                                                b.Opponent.Login.Equals(userName, StringComparison.OrdinalIgnoreCase)));
                 if (battleInDatabase == null)
                     return new Result();
 
@@ -104,9 +103,16 @@ namespace BattleShip.Repository.InDatabase
                     battleInDatabase.OpponentIsReady = true;
                 }
 
+                string attacker=string.Empty;
+
+                if (battleInDatabase.PlayerIsReady && battleInDatabase.OpponentIsReady)
+                    attacker = battleInDatabase.Attacker == battleInDatabase.PlayerId
+                        ? battleInDatabase.Player.Login
+                        : battleInDatabase.Opponent.Login;
+                
                 await _context.SaveChangesAsync();
 
-                return new Result {IsSuccess = true, Data = new {id = battleInDatabase.BattleId}};
+                return new Result {IsSuccess = true, Data = new {attacker}};
             }
             catch (Exception ex)
             {

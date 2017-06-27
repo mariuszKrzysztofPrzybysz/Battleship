@@ -13,12 +13,12 @@ namespace BattleShip.Web.Hubs
 {
     public class ChatHub : Hub
     {
-        private readonly IAccountRepository _repository
-            = ContainerManager.Container.Resolve<IAccountRepository>();
+        private readonly IPlayerRepository _playerRepository
+            = ContainerManager.Container.Resolve<IPlayerRepository>();
 
         public void RedirectToBattleWebPage(string playerName, long battleId)
         {
-            var targetUrl = UrlBuilder.GetUrl("Battle", "Play", new string[] {$"id={battleId}"});
+            var targetUrl = UrlBuilder.GetUrl("Battle", "Play", new string[] {$"battleId={battleId}"});
 
             Clients.Groups(new List<string> {playerName, Context.User.Identity.Name}).openNewWebPage(targetUrl);
         }
@@ -72,7 +72,7 @@ namespace BattleShip.Web.Hubs
 
             await Groups.Add(Context.ConnectionId, userName);
 
-            var actualPlayerStatus = await _repository.EnterChatWebPage(userName);
+            var actualPlayerStatus = await _playerRepository.EnterChatWebPage(userName);
 
             Clients.Others
                 .addOrUpdatePlayerPermissions(actualPlayerStatus.Login,
@@ -84,18 +84,12 @@ namespace BattleShip.Web.Hubs
         {
             var userName = Context.User.Identity.Name;
 
-            var result = await _repository.ExitChatWebPage(userName);
+            var result = await _playerRepository.ExitChatWebPage(userName);
 
             if (result.IsSuccess)
             {
                 Clients.Others
                     .removePlayerFromTheList(userName);
-
-                //await Groups.Remove(Context.ConnectionId, userName);
-            }
-            else
-            {
-                //TODO: Zrzut błędu do bazy danych
             }
         }
     }

@@ -13,12 +13,6 @@ namespace BattleShip.Repository.Interfaces
 
         Task<Result> AuthenticateAccountAsync(string login, string password);
 
-        Task<IEnumerable<AccountPermissionsViewModel>> GetAllOnlinePlayersExceptAsync(string login);
-
-        Task<AccountPermissionsViewModel> EnterChatWebPage(string accountName);
-
-        Task<Result> ExitChatWebPage(string accountName);
-
         Task<Result> UpdateAccountAsync(EditAccountViewModel viewModel);
 
         Task<Account> GetAccountAsync(string login);
