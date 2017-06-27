@@ -6,7 +6,7 @@ printBoardForOpponent = function () {
 };
 
 printBoard = function(tdCells) {
-    let columns = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    const columns = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
     const tbody = $("<tbody/>");
 
@@ -17,11 +17,11 @@ printBoard = function(tdCells) {
     tbody.append(tr);
 
     for (let r = 1; r <= 10; r++) {
-        let tr = $("<tr/>");
+        tr = $("<tr/>");
         tr.append(`<td>${r}</td>`);
 
         for (let c = 1; c < columns.length; c++) {
-            tr.append(tdCells);
+            tr.append(tdCells(columns[c],r));
         }
 
         tbody.append(tr);
