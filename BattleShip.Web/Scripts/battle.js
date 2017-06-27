@@ -325,7 +325,6 @@
             message: `You are a winner! ${opponent} has given in.`,
             size: "small",
             callback: function (r) {
-                //battleHubProxy.server.leaveBattle(battleId);
                 window.location = targetLocation;
             }
         });
@@ -339,7 +338,7 @@
         else
             playerButton.addClass("js-miss");
 
-        opponentTable.on("click","td.cell" ,initializeOpponentBoard);
+        opponentTable.on("click", "td.cell", initializeOpponentBoard);
         $("div#action").text("Action: attack");
     }
 });

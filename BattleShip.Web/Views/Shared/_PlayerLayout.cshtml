@@ -37,13 +37,11 @@
 </div>
 <div class="container body-content">
     @RenderBody()
-    <hr/>
-    <footer class="text-center">
-        <p>&copy; @DateTime.Now.Year - Battletship</p>
-    </footer>
 </div>
-
-
+<footer>
+    <hr />
+    <p>&copy; @DateTime.Now.Year - Battletship</p>
+</footer>
 @RenderSection("scripts", false)
 </body>
 </html>

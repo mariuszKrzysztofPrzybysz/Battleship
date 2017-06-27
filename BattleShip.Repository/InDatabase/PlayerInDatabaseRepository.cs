@@ -93,12 +93,12 @@ namespace BattleShip.Repository.InDatabase
                         AllowPrivateChat = account.AllowPrivateChat
                     };
 
-                return null;
+                return new AccountPermissionsViewModel();
 
             }
             catch
             {
-                return null;
+                return new AccountPermissionsViewModel();
             }
         }
 

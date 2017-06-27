@@ -23,9 +23,13 @@ namespace BattleShip.Web
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new StyleBundle("~/Content/chat").Include(
+                "~/Content/chat.css"
+            ));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap-spacelab.css",
-                      "~/Content/site.css"));
+                "~/Content/bootstrap-spacelab.css",
+                "~/Content/site.css"));
         }
     }
 }

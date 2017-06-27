@@ -1,5 +1,6 @@
-﻿$(function () {
+﻿$(function() {
     const messageInput = $('input#message-input');
+    const messageButton = $('button#message-button');
     const chatMessageContainer = $('ul#js-chat-messages-container');
     const privateChat = $('button[data-event="private-chat"]');
     const battle = $('button[data-event="battle"]');
@@ -14,57 +15,56 @@
             message: "Kliknij, aby przejść na nową stronę",
             size: "small",
             callback: function() {
-                //window.open(targetPage);
                 window.location = targetPage;
             }
         });
     }
 
-    chatHubProxy.client.removePlayerFromTheList=function(sender) {
-        playerList.find(`li[data-player-name="` + sender + `"]`).remove();
+    chatHubProxy.client.removePlayerFromTheList = function(playerName) {
+        playerList.find(`li[data-player-name="` + playerName + `"]`).remove();
     }
 
-    chatHubProxy.client.addOrUpdatePlayerPermissions = function (sender, allowPrivateChat, allowBattle) {
-        var playerOnTheList = playerList.find(`li[data-player-name="` + sender + `"]`);
+    chatHubProxy.client.addOrUpdatePlayerPermissions = function (data) {
+        var playerOnTheList = playerList.find(`li[data-player-name="` + data.Login + `"]`);
 
-        let allowPrivateChatClass = allowPrivateChat === true ? "active" : "disabled";
-        let allowBattleClass = allowBattle === true ? "active" : "disabled";
+        let allowPrivateChatClass = data.AllowPrivateChat === true ? "active" : "disabled";
+        let allowBattleClass = data.AllowNewBattle === true ? "active" : "disabled";
 
-        if (playerOnTheList.length ===0) {
-            //TODO: Dodać nowozalogowanego użytkownika do listy
-            var newPlayer = $(`<li class="list-group-item" data-player-name="`+sender+`">
-                                    <div class="media">
-                                        <div class="media-left">
-                                            <img src="Content/Images/Photos/`+sender+`.jpg" class="img-rounded" alt="`+sender+`" width="50" height="50">
-                                        </div>
-                                        <div class="media-body">
-                                            <h4 class="media-heading">`+sender+`</h4>
-                                            <button type="button" class="btn btn-info btn-xs `+allowPrivateChatClass+`" data-event="private-chat">Private chat</button>
-                                            <button type="button" class = "btn btn-danger btn-xs `+allowBattleClass+`" data-event="battle">New battle</button>
-                                        </div>
-                                    </div>
-                                </li>`);
+        if (playerOnTheList.length === 0) {
+            let login = data.Login;
+            var newPlayer = $(`<li class="list-group-item" data-player-name="` +
+                login +
+                `">
+                <div class="media">
+                <div class="media-left">
+                <img src="Content/Images/Photos/` +
+                login +
+                `.jpg" class="img-rounded" alt="` +
+                login +
+                `" width="50" height="50">
+                </div>
+                <div class="media-body">
+                <h4 class="media-heading">` +
+                login +
+                `</h4>
+                <button type="button" class="btn btn-info btn-xs ` +
+                allowPrivateChatClass +
+                `" data-event="private-chat">Private chat</button>
+                <button type="button" class = "btn btn-danger btn-xs ` +
+                allowBattleClass +
+                `" data-event="battle">New battle</button>
+                </div>
+                </div>
+                </li>`);
 
             let privateChatButton = newPlayer.find('button.active[data-event="private-chat"]');
             privateChatButton.click(function() {
-                //bootbox.dialog({
-                //    title: 'Prywatny chat',
-                //    message: '<p class="text-center">Wysłano zaproszenie do ' + sender + '.</p>',
-                //    onEscape: true
-                //});
-
-                chatHubProxy.server.inviteToPrivateChat(sender);
+                chatHubProxy.server.inviteToPrivateChat(login);
             });
 
             let battleButton = newPlayer.find('button.active[data-event="battle"]');
-            battleButton.click(function () {
-                //bootbox.dialog({
-                //    title: 'Nowa bitwa',
-                //    message: '<p class="text-center">Wysłano zaproszenie do ' + sender + '.</p>',
-                //    onEscape: true
-                //});
-
-                chatHubProxy.server.inviteToBattle(sender);
+            battleButton.click(function() {
+                chatHubProxy.server.inviteToBattle(login);
             });
 
             playerList.prepend(newPlayer);
@@ -88,11 +88,11 @@
         messagesContainer.prepend(addNewMessage(sender, message));
     };
 
-    chatHubProxy.client.receiveInvitationToPrivateChat = function (sender, privateChatGroupName) {
+    chatHubProxy.client.receiveInvitationToPrivateChat = function(sender, privateChatGroupName) {
         bootbox.confirm({
             title: `Zaproszenie do prywatnego czatu`,
             message:
-                `Użytkownik ` + sender + ` zaprasza na prywatny czat. Czy się zgadzasz?`,
+                `Użytkownik ${sender} zaprasza na prywatny czat. Czy się zgadzasz?`,
             buttons: {
                 cancel: {
                     label: '<i class="fa fa-times"></i> Nie'
@@ -103,18 +103,18 @@
             },
             callback: function(result) {
                 if (result === true) {
-                    chatHubProxy.server.openNewTab(sender, privateChatGroupName);
-                } else {
-                    
+                    chatHubProxy.server.startPrivateChat(sender, privateChatGroupName);
                 }
             }
         });
     };
 
-    chatHubProxy.client.receiveInvitationToBattle = function (playerName) {
+    chatHubProxy.client.receiveInvitationToBattle = function(playerName) {
         bootbox.confirm({
             title: `Gracz ${playerName} wyzywa cię na bitwę. Podejmiesz wyzwanie?`,
-            message: `<center><img src="/Content/Images/battle.jpg" class="img-rounded" alt="battle" width="100%"></center>`,
+            size: "small",
+            message:
+                `<center><img src="/Content/Images/battle.jpg" class="img-rounded" alt="battle" width="100%"></center>`,
             buttons: {
                 cancel: {
                     label: '<i class="fa fa-times"></i> Nie'
@@ -123,7 +123,7 @@
                     label: '<i class="fa fa-check"></i> Tak'
                 }
             },
-            callback: function (result) {
+            callback: function(result) {
                 if (result === true) {
                     $.ajax({
                         url: "/Battle/CreateAsync",
@@ -138,29 +138,12 @@
                             console.log(message);
                         }
                     });
-                    
-                } else {
-
                 }
             }
         });
     };
 
-    function initClosePrivateChat(navTab, playerName, privateChatGroupName) {
-        navTab.find('span.close').click(function () {
-            navTab.remove();
-            let tabPane = $('div#' + playerName);
-            tabPane.remove();
-
-            navTabs.find('li').first().addClass('active');
-            $('div#chat').addClass('active in');
-
-            chatHubProxy.server.sendPrivateMessage(privateChatGroupName,
-                "Użytkownik " + playerName + " zakończył prywaną rozmowę");
-        });
-    }
-
-    chatHubProxy.client.openNewTab = function (playerName, privateChatGroupName) {
+    chatHubProxy.client.startPrivateChat = function (playerName, privateChatGroupName) {
         let navTab = $(`<li data-player-name="` +
             playerName +
             `" data-private-chat-group-name=` +
@@ -171,7 +154,7 @@
             playerName +
             `&nbsp;<span class="close" aria-hidden="true">&times;</span></a></li>`);
 
-        initClosePrivateChat(navTab, playerName, privateChatGroupName);
+        initClosePrivateChatButton(navTab, playerName, privateChatGroupName);
 
         navTabs.append(navTab);
 
@@ -182,70 +165,79 @@
             `-messages-container" data-private-chat-group-name="` +
             privateChatGroupName +
             `"></ul>
-                                </div>`);
+            </div>`);
     };
 
-    $.connection.hub.start().done(function () {
-        privateChat.each(function () {
-            if ($(this).hasClass('active')) {
-                //TODO: click vs on('click', ...
+    function initClosePrivateChatButton(navTab, playerName, privateChatGroupName) {
+        navTab.find("span.close").click(function () {
+            navTab.remove();
+            let tabPane = $(`div#${playerName}`);
+            tabPane.remove();
+
+            navTabs.find("li").first().addClass("active");
+            $("div#chat").addClass("active in");
+            messageInput.focus();
+
+            chatHubProxy.server.sendPrivateMessage(privateChatGroupName,
+                "Użytkownik zamknął okno prywanej rozmowy");
+        });
+    }
+
+    $.connection.hub.start().done(function() {
+        privateChat.each(function() {
+            if ($(this).hasClass("active")) {
                 $(this).click(function() {
-                        let addresseePlayerName = $(this).closest('li').data('player-name');
+                    let addresseePlayerName = $(this).closest("li").data("player-name");
 
-                        //bootbox.dialog({
-                        //    title: 'Prywatny chat',
-                        //    message: '<p class="text-center">Wysłano zaproszenie do ' + addresseePlayerName + '.</p>',
-                        //    onEscape: true
-                        //});
-
-                        chatHubProxy.server.inviteToPrivateChat(addresseePlayerName);
-                    });
+                    chatHubProxy.server.inviteToPrivateChat(addresseePlayerName);
+                });
             }
         });
 
-        battle.each(function () {
-            if ($(this).hasClass('active')) {
-                //TODO: click vs on('click', ...
-                $(this).click(function () {
-                    let addresseePlayerName = $(this).closest('li').data('player-name');
-
-                    //bootbox.dialog({
-                    //    title: 'Bitwa',
-                    //    message: '<p class="text-center">Wysłano zaproszenie do ' + addresseePlayerName + '.</p>',
-                    //    onEscape: true
-                    //});
+        battle.each(function() {
+            if ($(this).hasClass("active")) {
+                $(this).click(function() {
+                    let addresseePlayerName = $(this).closest("li").data("player-name");
 
                     chatHubProxy.server.inviteToBattle(addresseePlayerName);
                 });
             }
         });
 
-        messageInput.keyup(function (event) {
+        messageInput.keyup(function(event) {
             if (event.key === "Enter") {
-                let encodedMessage = htmlEncode(messageInput.val());
-
-                let addresee = $('ul.nav-tabs').find('li.active');
-
-                let encodedAddreseePlayerName = htmlEncode(addresee.data('player-name'));
-
-                if (typeof encodedAddreseePlayerName === "undefined" || encodedAddreseePlayerName==="") {
-                    chatHubProxy.server.sendPublicMessage(encodedMessage);
-                } else {
-                    let encodedPrivateChatGroupName = htmlEncode(addresee.data('private-chat-group-name'));
-                    chatHubProxy.server.sendPrivateMessage(encodedPrivateChatGroupName, encodedMessage);
-                }
-
-                messageInput.val("");
+                sendMessage();
             }
             if (event.key === "Escape") {
                 messageInput.val("");
             }
         });
+
+        messageButton.on("click", sendMessage);
+
+        function sendMessage() {
+            let encodedMessage = htmlEncode(messageInput.val());
+            let addresee = $("ul.nav-tabs").find("li.active");
+            let encodedAddreseePlayerName = htmlEncode(addresee.data("player-name"));
+
+            if (encodedAddreseePlayerName === "") {
+                chatHubProxy.server.sendPublicMessage(encodedMessage);
+            } else {
+                let encodedPrivateChatGroupName = htmlEncode(addresee.data("private-chat-group-name"));
+                chatHubProxy.server.sendPrivateMessage(encodedPrivateChatGroupName, encodedMessage);
+            }
+
+            messageInput.val("");
+        }
+
+        window.onbeforeunload = function() {
+            chatHubProxy.server.leaveChat();
+        }
     });
 });
 
 function htmlEncode(value) {
-    var encodedValue = $('<div />').text(value).html();
+    var encodedValue = $("<div />").text(value).html();
     return encodedValue;
 }
 

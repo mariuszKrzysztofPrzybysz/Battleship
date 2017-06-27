@@ -18,7 +18,7 @@ namespace BattleShip.Web.Hubs
 
         public void RedirectToBattleWebPage(string playerName, long battleId)
         {
-            var targetUrl = UrlBuilder.GetUrl("Battle", "Play", new string[] {$"battleId={battleId}"});
+            var targetUrl = UrlBuilder.GetUrl("Battle", "Play", new[] {$"battleId={battleId}"});
 
             Clients.Groups(new List<string> {playerName, Context.User.Identity.Name}).openNewWebPage(targetUrl);
         }
@@ -49,13 +49,13 @@ namespace BattleShip.Web.Hubs
                 .receiveInvitationToPrivateChat(sender, privateChatGroupName);
         }
 
-        public void OpenNewTab(string sender, string privateChatGroupName)
+        public void StartPrivateChat(string sender, string privateChatGroupName)
         {
             Groups.Add(Context.ConnectionId, privateChatGroupName);
 
-            Clients.Group(Context.User.Identity.Name).openNewTab(sender, privateChatGroupName);
+            Clients.Group(Context.User.Identity.Name).startPrivateChat(sender, privateChatGroupName);
 
-            Clients.Group(sender).openNewTab(Context.User.Identity.Name, privateChatGroupName);
+            Clients.Group(sender).startPrivateChat(Context.User.Identity.Name, privateChatGroupName);
         }
 
         public void SendPrivateMessage(string privateChatGroupName, string message)
@@ -66,31 +66,33 @@ namespace BattleShip.Web.Hubs
                 .receivePrivateMessage(privateChatGroupName, sender, message);
         }
 
+        public async Task LeaveChat()
+        {
+            var userName = Context.User.Identity.Name;
+
+            await Groups.Remove(Context.ConnectionId, userName);
+
+            Clients.Others.removePlayerFromTheList(userName);
+        }
+
         public override async Task OnConnected()
         {
             var userName = Context.User.Identity.Name;
 
             await Groups.Add(Context.ConnectionId, userName);
 
-            var actualPlayerStatus = await _playerRepository.EnterChatWebPage(userName);
+            var playerStatus = await _playerRepository.EnterChatWebPage(userName);
 
-            Clients.Others
-                .addOrUpdatePlayerPermissions(actualPlayerStatus.Login,
-                    actualPlayerStatus.AllowPrivateChat,
-                    actualPlayerStatus.AllowNewBattle);
+            Clients.Others.addOrUpdatePlayerPermissions(playerStatus);
         }
 
         public override async Task OnDisconnected(bool stopCalled)
         {
             var userName = Context.User.Identity.Name;
 
-            var result = await _playerRepository.ExitChatWebPage(userName);
+            await _playerRepository.ExitChatWebPage(userName);
 
-            if (result.IsSuccess)
-            {
-                Clients.Others
-                    .removePlayerFromTheList(userName);
-            }
+            
         }
     }
 }
