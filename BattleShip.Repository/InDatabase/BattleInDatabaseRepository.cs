@@ -291,10 +291,6 @@ namespace BattleShip.Repository.InDatabase
 
             await _context.SaveChangesAsync();
 
-            //var winner = battleInDatabase.Player.Login.Equals(userName, StringComparison.OrdinalIgnoreCase)
-            //    ? battleInDatabase.Opponent.Login
-            //    : battleInDatabase.Player.Login;
-
             return new Result {IsSuccess = true};
         }
     }
