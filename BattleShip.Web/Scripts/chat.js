@@ -125,7 +125,7 @@
             callback: function (result) {
                 if (result === true) {
                     $.ajax({
-                        url: "/Battle/Create",
+                        url: "/Battle/CreateAsync",
                         type: "POST",
                         data: { playerName: playerName },
                         success: function(result) {

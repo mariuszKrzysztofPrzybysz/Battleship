@@ -250,7 +250,7 @@
                     return;
                 }
                 $.ajax({
-                    url: root + "/Battle/UploadBoard",
+                    url: root + "/Battle/UploadBoardAsync",
                     method: "POST",
                     data: { battleId: battleId, board: playerBoard },
                     beforeSend: function() {

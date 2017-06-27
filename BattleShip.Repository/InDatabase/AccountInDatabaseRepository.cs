@@ -97,22 +97,16 @@ namespace BattleShip.Repository.InDatabase
                         transacion.Commit();
                         return new Result {IsSuccess = true};
                     }
-                    catch (Exception)
+                    catch
                     {
                         transacion.Rollback();
                         return new Result {ErrorMessage = "Nie utworzono konta użytkownika"};
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                return new Result
-                {
-                    ErrorMessage =
-                        "Wystąpił błąd związany z siecią lub wystąpieniem podczas ustanawiania połączenia z serwerem programu SQL Server. " +
-                        "Nie można odnaleźć serwera lub jest on niedostępny. " +
-                        "Sprawdź, czy nazwa wystąpienia jest poprawna i czy konfiguracja serwera programu SQL Server zezwala na połączenia zdalne."
-                };
+                return new Result {ErrorMessage = ex.Message};
             }
         }
 
@@ -134,15 +128,9 @@ namespace BattleShip.Repository.InDatabase
                     }
                     : new Result {IsSuccess = true};
             }
-            catch
+            catch(Exception ex)
             {
-                return new Result
-                {
-                    ErrorMessage =
-                        "Wystąpił błąd związany z siecią lub wystąpieniem podczas ustanawiania połączenia z serwerem programu SQL Server. " +
-                        "Nie można odnaleźć serwera lub jest on niedostępny. " +
-                        "Sprawdź, czy nazwa wystąpienia jest poprawna i czy konfiguracja serwera programu SQL Server zezwala na połączenia zdalne."
-                };
+                return new Result {ErrorMessage = ex.Message};
             }
         }
 
@@ -196,7 +184,7 @@ namespace BattleShip.Repository.InDatabase
                 return null;
 
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }
@@ -217,7 +205,7 @@ namespace BattleShip.Repository.InDatabase
             }
             catch (Exception ex)
             {
-                return new Result {IsSuccess = false, ErrorMessage = ex.Message};
+                return new Result {ErrorMessage = ex.Message};
             }
         }
 
@@ -243,37 +231,9 @@ namespace BattleShip.Repository.InDatabase
 
                 return new Result {IsSuccess = true};
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (Exception ex)
             {
                 return new Result {ErrorMessage = ex.Message};
-            }
-            catch (DbEntityValidationException ex)
-            {
-                return new Result {ErrorMessage = ex.Message};
-            }
-            catch (DbUpdateException ex)
-            {
-                return new Result {ErrorMessage = ex.Message};
-            }
-            catch (NotSupportedException ex)
-            {
-                return new Result {ErrorMessage = ex.Message};
-            }
-            catch (ObjectDisposedException ex)
-            {
-                return new Result {ErrorMessage = ex.Message};
-            }
-            catch (InvalidOperationException ex)
-            {
-                return new Result {ErrorMessage = ex.Message};
-            }
-            catch (Exception)
-            {
-                return new Result
-                {
-                    ErrorMessage =
-                        "Wystąpił błąd związany z siecią lub wystąpieniem podczas ustanawiania połączenia z serwerem programu SQL Server. Nie można odnaleźć serwera lub jest on niedostępny."
-                };
             }
         }
 
@@ -287,7 +247,7 @@ namespace BattleShip.Repository.InDatabase
 
                 return accountInDatabase;
             }
-            catch (Exception)
+            catch
             {
                 return null;
             }

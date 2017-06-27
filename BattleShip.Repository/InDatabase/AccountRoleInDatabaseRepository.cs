@@ -20,11 +20,18 @@ namespace BattleShip.Repository.InDatabase
 
         public async Task<IEnumerable<Role>> GetAccountRolesAsync(string login)
         {
-            return await _context.Roles
-                .Where(r =>
-                    r.AccountRoles.Any(ar =>
-                        ar.Account.Login.Equals(login, StringComparison.OrdinalIgnoreCase)))
-                .ToListAsync();
+            try
+            {
+                return await _context.Roles
+                    .Where(r =>
+                        r.AccountRoles.Any(ar =>
+                            ar.Account.Login.Equals(login, StringComparison.OrdinalIgnoreCase)))
+                    .ToListAsync();
+            }
+            catch
+            {
+                return new List<Role>();
+            }
         }
     }
 }
