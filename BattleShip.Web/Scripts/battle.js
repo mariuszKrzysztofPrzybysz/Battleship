@@ -7,34 +7,34 @@
     const playerTable = $("div#player table");
     const opponentTable = $("div#opponent table");
 
+    const occupied = "js-occupied";
+
     playerTable.append(printBoardForPlayer());
     opponentTable.append(printBoardForOpponent());
 
 
     function initializePlayerBoard() {
-        var tbody = $("div#player tbody");
-
-        const occupied = "occupied";
+        var tbody = playerTable.find("tbody");
 
         tbody.find("td.cell").each(function() {
             $(this).on("click",
                 function() {
                     const button = $(this).find("button");
-                    const cellPosition = $(this).data('cell');
+                    const cellPosition = $(this).data("cell");
                     if ($(this).hasClass(occupied)) {
                         $(this).removeClass(occupied);
 
-                        button.removeClass('btn-success');
-                        button.addClass('btn-info');
+                        button.removeClass("btn-success");
+                        button.addClass("btn-info");
 
                         removeConstraints(cellPosition);
                     } else {
-                        let counter = parseInt($(this).attr('data-counter'));
+                        let counter = parseInt($(this).attr("data-counter"));
                         if (counter === 0) {
                             $(this).addClass(occupied);
 
-                            button.removeClass('btn-info');
-                            button.addClass('btn-success');
+                            button.removeClass("btn-info");
+                            button.addClass("btn-success");
 
                             addConstraints(cellPosition);
                         }
@@ -48,119 +48,59 @@
             let column = cellPosition.split("-")[0];
             let row = parseInt(cellPosition.split("-")[1]);
 
-            let leftTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]
-                }-${row - 1}"]`);
+            let leftTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]}-${row - 1}"]`);
             increaseCellCounter(leftTopCell);
 
-            let rightTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row - 1
-                }"]`);
+            let rightTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row - 1}"]`);
             increaseCellCounter(rightTopCell);
 
-            let rightBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row + 1
-                }"]`);
+            let rightBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row + 1}"]`);
             increaseCellCounter(rightBottomCell);
 
-            let leftBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]
-                }-${row + 1}"]`);
+            let leftBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]}-${row + 1}"]`);
             increaseCellCounter(leftBottomCell);
-        };
 
-        function increaseCellCounter(cell) {
-            let cellCounter = parseInt(cell.attr("data-counter"));
-            if (!isNaN(cellCounter)) {
-                cellCounter++;
-                cell.attr("data-counter", cellCounter.toString());
-                cell.find("button").addClass("disabled");
-            }
+            function increaseCellCounter(cell) {
+                let cellCounter = parseInt(cell.attr("data-counter"));
+                if (!isNaN(cellCounter)) {
+                    cellCounter++;
+                    cell.attr("data-counter", cellCounter.toString());
+                    cell.find("button").addClass("disabled");
+                }
+            };
         };
 
         function removeConstraints(cellPosition) {
             let column = cellPosition.split("-")[0];
             let row = parseInt(cellPosition.split("-")[1]);
 
-            let leftTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]}-${row - 1
-                }"]`);
+            let leftTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]}-${row - 1}"]`);
             decreaseCellCounter(leftTopCell);
 
-            let rightTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]
-                }-${row - 1
-                }"]`);
+            let rightTopCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row - 1}"]`);
             decreaseCellCounter(rightTopCell);
 
-            let rightBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row + 1
-                }"]`);
+            let rightBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) + 1]}-${row + 1}"]`);
             decreaseCellCounter(rightBottomCell);
 
-            let leftBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]
-                }-${row + 1
-                }"]`);
+            let leftBottomCell = tbody.find(`td[data-cell="${columns[columns.indexOf(column) - 1]}-${row + 1}"]`);
             decreaseCellCounter(leftBottomCell);
-        };
 
-        function decreaseCellCounter(cell) {
-            let cellCounter = parseInt(cell.attr("data-counter"));
-            if (!isNaN(cellCounter)) {
-                cellCounter--;
-                cell.attr("data-counter", cellCounter.toString());
-                if (cellCounter <= 0) {
-                    cell.find("button").removeClass("disabled");
+            function decreaseCellCounter(cell) {
+                let cellCounter = parseInt(cell.attr("data-counter"));
+                if (!isNaN(cellCounter)) {
+                    cellCounter--;
+                    cell.attr("data-counter", cellCounter.toString());
+                    if (cellCounter <= 0) {
+                        cell.find("button").removeClass("disabled");
+                    }
                 }
-            }
+            };
         };
     };
 
     function uninitializePlayerBoard() {
-        playerTable.find("td.cell").off('click');
-    }
-
-    function initializeOpponentBoard() {
-        const opponentCells = $('div#opponent td.cell');
-
-        opponentCells.each(function() {
-            $(this).click(function() {
-                let cell = $(this);
-                $.ajax({
-                    url: root + "/Battle/AttackAsync",
-                    method: "POST",
-                    data: { battleId: battleId, cell: $(this).data("cell") },
-                    success: function(result) {
-                        if (result.IsSuccess) {
-                            uninitializeOpponentBoard();
-                            $("div#action").text("Action: defend");
-
-                            if (result.Data.result === "missed") {
-                                cell.find("button").addClass("js-miss");
-                                battleHubProxy.server.updateCellStatus(battleId, cell.data("cell"), false);
-                            }
-                            else {
-                                cell.find("button").addClass("js-hit");
-                                battleHubProxy.server.updateCellStatus(battleId, cell.data("cell"), true);
-
-                                if (result.Data.isGameOver === true) {
-                                    bootbox.alert({
-                                        title: "Game over",
-                                        message: "You have won",
-                                        callback: function(r) {
-                                            battleHubProxy.server.sendMessageToDefeated(battleId);
-                                            window.location = root + "/Chat/Index";
-                                        }
-                                    });
-                                }
-
-                                cell.off("click");
-                            }
-                        }
-                    },
-                    error: function(message) {
-                        console.log(message);
-                    }
-                });
-            });
-        });
-    };
-
-    function uninitializeOpponentBoard() {
-        opponentTable.find("td.cell").off("click");
+        playerTable.find("td.cell").off("click");
     }
 
     function initializeControlPanel() {
@@ -185,16 +125,17 @@
                         $.ajax({
                             url: root + "/Battle/GiveInAsync",
                             method: "POST",
-                            data: {battleId: battleId},
+                            data: { battleId: battleId },
                             success: function (data) {
                                 bootbox.alert({
                                     title: "Game over",
                                     message: "You have given in.",
-                                    callback: function (r) {
+                                    callback: function () {
                                         let targetLocation = data.Data;
 
                                         battleHubProxy.server.giveIn(battleId, targetLocation);
-                                        window.location = targetLocation;
+
+                                        close();
                                     }
                                 });
                             },
@@ -212,33 +153,35 @@
 
             cells.each(function () {
                 $(this).attr("data-counter", 0);
-                $(this).removeClass("occupied");
+                $(this).removeClass(occupied);
 
                 let button = $(this).find("button");
+
                 button.removeClass("btn-success");
                 button.addClass("btn-info");
+
                 button.removeClass("disabled");
             });
         });
 
         readyButton.click(function () {
-            //const totalNumberOfDecks = 5 * 1 + 4 * 1 + 3 * 2 + 2 * 2 + 2 * 1;
-            const totalNumberOfDecks = 5;
-            let currentNumberOfDecks = parseInt($("div#player td.occupied").length);
-            if (currentNumberOfDecks < totalNumberOfDecks) {
+            const totalNumberOfDecks = 5 * 1 + 4 * 1 + 3 * 2 + 2 * 2 + 2 * 1;
+            let numberOfSelectedDecks = parseInt($(`div#player td.${occupied}`).length);
+
+            if (numberOfSelectedDecks < totalNumberOfDecks) {
                 bootbox.alert({
-                    message: `<center>Zakreśl jeszcze ${totalNumberOfDecks - currentNumberOfDecks} statki</center>`,
+                    message: `<center>Zakreśl jeszcze ${totalNumberOfDecks - numberOfSelectedDecks} statki</center>`,
                     size: "small"
                 });
-            } else if (currentNumberOfDecks > totalNumberOfDecks) {
+            } else if (numberOfSelectedDecks > totalNumberOfDecks) {
                 bootbox.alert({
                     closeButton: false,
-                    message: `<center>Wykreśl jeszcze ${currentNumberOfDecks - totalNumberOfDecks} statki</center>`,
+                    message: `<center>Wykreśl jeszcze ${numberOfSelectedDecks - totalNumberOfDecks} statki</center>`,
                     size: "small"
                 });
             } else {
                 let playerBoard = loadPlayerBoard();
-                
+
                 if (playerBoard.length === 0) {
                     bootbox.alert({
                         closeButton: false,
@@ -252,13 +195,21 @@
                     url: root + "/Battle/UploadBoardAsync",
                     method: "POST",
                     data: { battleId: battleId, board: playerBoard },
-                    beforeSend: function() {
+                    beforeSend: function () {
                         bootbox.dialog({
                             message: '<div class="text-center"><i class="fa fa fa-spin fa-spinner"></i> Loading...</div>'
                         });
                     },
                     success: function (result) {
-                        console.log(r.Data);
+                        if (result.IsSuccess === false) {
+                            bootbox.alert({
+                                closeButton: false,
+                                title: "Błąd",
+                                message: "<center>Wypełnij poprawnie planszę!</center>",
+                                size: "small"
+                            });
+                            return;
+                        }
                         bootbox.hideAll();
                         clearBoard.closest("div").remove();
                         readyButton.closest("div").remove();
@@ -267,22 +218,75 @@
                         battleHubProxy.server.changePlayerStatusToReady(battleId);
                     },
                     error: function (message) {
-                        //TODO
                         bootbox.hideAll();
                         bootbox.dialog({
-                            message: `<div class="text-center">` + message + `</div>`
+                            message: `<div class="text-center">${message}</div>`
                         });
                     }
                 });
-                
+
             }
         });
     }
 
+    function initializeOpponentBoard() {
+        const opponentCells = opponentTable.find("td.cell");
+
+        opponentCells.each(function() {
+            $(this).click(function() {
+                let cell = $(this);
+                $.ajax({
+                    url: root + "/Battle/AttackAsync",
+                    method: "POST",
+                    data: { battleId: battleId, cell: $(this).data("cell") },
+                    success: function(result) {
+                        if (result.IsSuccess) {
+                            uninitializeOpponentBoard();
+                            $("div#action").text("Action: defend");
+
+                            let isHitted = result.Data.result === "hitted";
+
+                            if (isHitted===false) {
+                                cell.find("button").addClass("js-miss");
+                                battleHubProxy.server.updateCellStatus(battleId, cell.data("cell"), isHitted);
+                            }
+                            else {
+                                cell.find("button").addClass("js-hit");
+                                battleHubProxy.server.updateCellStatus(battleId, cell.data("cell"), isHitted);
+
+                                if (result.Data.isGameOver === true) {
+                                    battleHubProxy.server.sendMessageToDefeated(battleId);
+                                    bootbox.alert({
+                                        title: "Game over",
+                                        message: "You have won",
+                                        callback: function() {
+                                            close();
+                                        }
+                                    });
+                                }
+
+                                cell.off("click");
+                            }
+                        }
+                    },
+                    error: function(message) {
+                        bootbox.dialog({
+                            message: `<div class="text-center">${message}</div>`
+                        });
+                    }
+                });
+            });
+        });
+    };
+
+    function uninitializeOpponentBoard() {
+        opponentTable.find("td.cell").off("click");
+    }
+    
     function loadPlayerBoard() {
         let result = [];
 
-        playerTable.find("td.occupied").each(function() {
+        playerTable.find(`td.${occupied}`).each(function () {
             result.push($(this).data("cell"));
         });
 
@@ -314,7 +318,7 @@
             title: "Game over",
             message: `${winner} has won the battle. Click the button to return to chat`,
             callback: function(r) {
-                window.location = root + "/Chat/Index";
+                close();
             }
         });
     }
@@ -324,8 +328,8 @@
             title: "Game over",
             message: `You are a winner! ${opponent} has given in.`,
             size: "small",
-            callback: function (r) {
-                window.location = targetLocation;
+            callback: function () {
+                close();
             }
         });
     }
@@ -338,7 +342,7 @@
         else
             playerButton.addClass("js-miss");
 
-        opponentTable.on("click", "td.cell", initializeOpponentBoard);
+        initializeOpponentBoard();
         $("div#action").text("Action: attack");
     }
 });

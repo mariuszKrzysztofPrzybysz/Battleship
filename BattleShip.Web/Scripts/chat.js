@@ -15,7 +15,7 @@
             message: "Kliknij, aby przejść na nową stronę",
             size: "small",
             callback: function() {
-                window.location = targetPage;
+                window.open(targetPage);
             }
         });
     }
