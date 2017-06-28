@@ -26,14 +26,13 @@ namespace BattleShip.Web.Attributes
                     var rolesList = filterContext.HttpContext.Session["Roles"] as IEnumerable<Role>;
 
                     if (rolesList == null)
-                        filterContext.Result = new RedirectResult(UrlBuilderService.GetUrl("Home","Index"));
+                        filterContext.Result = new RedirectResult(UrlBuilderService.GetUrl("Error", "Index"));
 
                     else if (!rolesList.Any(x => x.Name.Equals(_role, StringComparison.OrdinalIgnoreCase)))
                     {
                         var url = new UrlHelper(filterContext.RequestContext);
                         var errorUrl = url.Action("Index", "Error",
                             new
-
                             {
                                 message = $"You are not authorized to make changes " +
                                           $"kontroler {filterContext.ActionDescriptor.ControllerDescriptor.ControllerName}" +
