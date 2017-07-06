@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
 using BattleShip.Repository.Interfaces;
 using BattleShip.Web.Helpers;
-using Microsoft.AspNet.SignalR;
 using BattleShip.Web.Infrastructure;
+using Microsoft.AspNet.SignalR;
 
 namespace BattleShip.Web.Hubs
 {
@@ -91,8 +88,6 @@ namespace BattleShip.Web.Hubs
             var userName = Context.User.Identity.Name;
 
             await _playerRepository.ExitChatWebPage(userName);
-
-            
         }
     }
 }

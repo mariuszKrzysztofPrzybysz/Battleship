@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using BattleShip.Web.Attributes;
 
 namespace BattleShip.Web
@@ -9,7 +8,7 @@ namespace BattleShip.Web
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
-            
+
             filters.Add(new BattleShipAuthorizeAttribute());
         }
     }

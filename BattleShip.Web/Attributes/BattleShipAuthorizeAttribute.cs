@@ -11,7 +11,7 @@ namespace BattleShip.Web.Attributes
     {
         private readonly string _role;
 
-        public BattleShipAuthorizeAttribute(string role = null) : base()
+        public BattleShipAuthorizeAttribute(string role = null)
         {
             _role = role;
         }
@@ -20,13 +20,14 @@ namespace BattleShip.Web.Attributes
         {
             base.OnAuthorization(filterContext);
             if (!string.IsNullOrEmpty(_role))
-            {
                 if (filterContext.HttpContext.Session != null)
                 {
                     var rolesList = filterContext.HttpContext.Session["Roles"] as IEnumerable<Role>;
 
                     if (rolesList == null)
+                    {
                         filterContext.Result = new RedirectResult(UrlBuilderService.GetUrl("Error", "Index"));
+                    }
 
                     else if (!rolesList.Any(x => x.Name.Equals(_role, StringComparison.OrdinalIgnoreCase)))
                     {
@@ -41,7 +42,6 @@ namespace BattleShip.Web.Attributes
                         filterContext.Result = new RedirectResult(errorUrl);
                     }
                 }
-            }
         }
     }
 }

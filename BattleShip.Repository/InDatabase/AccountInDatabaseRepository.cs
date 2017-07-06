@@ -47,10 +47,9 @@ namespace BattleShip.Repository.InDatabase
                                     $"i nie rozróżniamy wielkości liter. Chcesz podać inną nazwę?"
                             };
 
-                        
 
                         var newAccount = Mapper.Map<AddAccountViewModel, Account>(viewModel);
-                        
+
                         _context.Accounts.Add(newAccount);
 
                         var numberOfAccountsWrittenToUnderlyingDatabase
@@ -94,7 +93,7 @@ namespace BattleShip.Repository.InDatabase
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new Result {ErrorMessage = ex.Message};
             }
@@ -118,12 +117,12 @@ namespace BattleShip.Repository.InDatabase
                     }
                     : new Result {IsSuccess = true};
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new Result {ErrorMessage = ex.Message};
             }
         }
-        
+
         public async Task<Result> UpdateAccountAsync(EditAccountViewModel viewModel)
         {
             try

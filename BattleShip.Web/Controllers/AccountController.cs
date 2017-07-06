@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
-using System.Web.Services.Protocols;
 using BattleShip.Repository.Interfaces;
 using BattleShip.Web.ViewModels;
 
@@ -94,7 +89,7 @@ namespace BattleShip.Web.Controllers
             FormsAuthentication.SetAuthCookie(userName, createPersistentCookie);
 
             var rolesListInDatabaseForAccount = await _accountRoleRepository.GetAccountRolesAsync(userName);
-            
+
             Session.Add("Roles", rolesListInDatabaseForAccount);
         }
     }

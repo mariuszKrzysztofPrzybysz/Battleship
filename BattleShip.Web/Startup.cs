@@ -1,8 +1,9 @@
-﻿using Microsoft.Owin;
+﻿using BattleShip.Web;
+using Microsoft.Owin;
 using Owin;
-using BattleShip.Web;
 
-[assembly: OwinStartup(typeof(BattleShip.Web.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
+
 namespace BattleShip.Web
 {
     public class Startup

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BattleShip.Repository.RepositoryHelpers
+﻿namespace BattleShip.Repository.RepositoryHelpers
 {
     public class BoardHelper
     {

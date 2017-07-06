@@ -36,7 +36,7 @@ namespace BattleShip.Repository.ViewModels
 
         public string Opponent { get; set; }
 
-        [Display(Name="UTC start date and time")]
+        [Display(Name = "UTC start date and time")]
         public DateTime StartUtcDateTime { get; set; }
 
         [Display(Name = "Duration (in seconds)")]

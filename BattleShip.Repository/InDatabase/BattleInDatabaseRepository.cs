@@ -24,11 +24,11 @@ namespace BattleShip.Repository.InDatabase
             {
                 var player = await _context.Accounts
                     .SingleAsync(a
-                    => a.Login.Equals(viewModel.PlayerName, StringComparison.OrdinalIgnoreCase));
+                        => a.Login.Equals(viewModel.PlayerName, StringComparison.OrdinalIgnoreCase));
 
                 var opponent = await _context.Accounts
                     .SingleOrDefaultAsync(a
-                    => a.Login.Equals(viewModel.OpponentName, StringComparison.OrdinalIgnoreCase));
+                        => a.Login.Equals(viewModel.OpponentName, StringComparison.OrdinalIgnoreCase));
 
                 if (opponent == null)
                     return new Result {ErrorMessage = $"Nie znaleziono gracza {viewModel.OpponentName}"};
@@ -52,7 +52,7 @@ namespace BattleShip.Repository.InDatabase
 
                 return new Result();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new Result {ErrorMessage = ex.Message};
             }
@@ -103,13 +103,13 @@ namespace BattleShip.Repository.InDatabase
                     battleInDatabase.OpponentIsReady = true;
                 }
 
-                string attacker=string.Empty;
+                var attacker = string.Empty;
 
                 if (battleInDatabase.PlayerIsReady && battleInDatabase.OpponentIsReady)
                     attacker = battleInDatabase.Attacker == battleInDatabase.PlayerId
                         ? battleInDatabase.Player.Login
                         : battleInDatabase.Opponent.Login;
-                
+
                 await _context.SaveChangesAsync();
 
                 return new Result {IsSuccess = true, Data = new {attacker}};
@@ -141,7 +141,7 @@ namespace BattleShip.Repository.InDatabase
                 if (battleInDatabase == null)
                     return new Result {ErrorMessage = "Error"};
 
-                string newBoard = String.Empty;
+                var newBoard = string.Empty;
                 Result result = null;
 
                 if (battleInDatabase.Player.Login.Equals(attackerName, StringComparison.OrdinalIgnoreCase))
@@ -149,7 +149,9 @@ namespace BattleShip.Repository.InDatabase
                     newBoard = battleInDatabase.OpponentBoard.Replace(cell, string.Empty);
 
                     if (newBoard == battleInDatabase.OpponentBoard)
+                    {
                         result = new Result {IsSuccess = true, Data = new {result = "missed", isGameOver = false}};
+                    }
 
                     else if (newBoard == string.Empty)
                     {
@@ -182,7 +184,9 @@ namespace BattleShip.Repository.InDatabase
                     newBoard = battleInDatabase.PlayerBoard.Replace(cell, string.Empty);
 
                     if (newBoard == battleInDatabase.PlayerBoard)
+                    {
                         result = new Result {IsSuccess = true, Data = new {result = "missed", isGameOver = false}};
+                    }
 
                     else if (newBoard == string.Empty)
                     {

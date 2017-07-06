@@ -21,7 +21,7 @@ namespace BattleShip.Web.Infrastructure
                 throw new HttpException(404,
                     $"Controller for path {requestContext.HttpContext.Request.Path} could not be found");
 
-            return (IController)_kernel.Resolve(controllerType);
+            return (IController) _kernel.Resolve(controllerType);
         }
 
         public override void ReleaseController(IController controller)
@@ -29,5 +29,4 @@ namespace BattleShip.Web.Infrastructure
             _kernel.ReleaseComponent(controller);
         }
     }
-
 }

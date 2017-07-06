@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using BattleShip.Database;
-using BattleShip.Database.Entities;
 using BattleShip.Repository.Interfaces;
 using BattleShip.Repository.RepositoryHelpers;
 using BattleShip.Repository.ViewModels;
@@ -22,7 +21,7 @@ namespace BattleShip.Repository.InDatabase
 
         public async Task<IEnumerable<PlayerBattlesViewModel>> GetPlayerBattles(string login)
         {
-            if(string.IsNullOrEmpty(login) || string.IsNullOrWhiteSpace(login))
+            if (string.IsNullOrEmpty(login) || string.IsNullOrWhiteSpace(login))
                 return new List<PlayerBattlesViewModel>();
 
             var result = await _context.Battles
@@ -38,8 +37,8 @@ namespace BattleShip.Repository.InDatabase
                         ? DbFunctions.DiffSeconds(b.StartUtcDateTime, b.EndUtcDateTime)
                         : DbFunctions.DiffSeconds(b.StartUtcDateTime, DateTime.UtcNow),
                     Winner = b.WinnerId.HasValue
-                    ? (b.WinnerId==b.Player.AccountId ? b.Player.Login : b.Opponent.Login)
-                    : string.Empty
+                        ? (b.WinnerId == b.Player.AccountId ? b.Player.Login : b.Opponent.Login)
+                        : string.Empty
                 })
                 .ToListAsync();
 
@@ -51,15 +50,15 @@ namespace BattleShip.Repository.InDatabase
             try
             {
                 var result = await _context.Accounts
-                .Where(a => a.IsOnChatWebPage
-                            && !a.Login.Equals(login, StringComparison.OrdinalIgnoreCase))
-                .Select(a => new AccountPermissionsViewModel
-                {
-                    Login = a.Login,
-                    AllowPrivateChat = a.AllowPrivateChat,
-                    AllowNewBattle = a.AllowNewBattle
-                })
-                .ToListAsync();
+                    .Where(a => a.IsOnChatWebPage
+                                && !a.Login.Equals(login, StringComparison.OrdinalIgnoreCase))
+                    .Select(a => new AccountPermissionsViewModel
+                    {
+                        Login = a.Login,
+                        AllowPrivateChat = a.AllowPrivateChat,
+                        AllowNewBattle = a.AllowNewBattle
+                    })
+                    .ToListAsync();
 
                 return result;
             }
@@ -67,7 +66,6 @@ namespace BattleShip.Repository.InDatabase
             {
                 return new List<AccountPermissionsViewModel>();
             }
-
         }
 
         public async Task<AccountPermissionsViewModel> EnterChatWebPage(string accountName)
@@ -94,7 +92,6 @@ namespace BattleShip.Repository.InDatabase
                     };
 
                 return new AccountPermissionsViewModel();
-
             }
             catch
             {
@@ -113,11 +110,11 @@ namespace BattleShip.Repository.InDatabase
 
                 await _context.SaveChangesAsync();
 
-                return new Result { IsSuccess = true };
+                return new Result {IsSuccess = true};
             }
             catch (Exception ex)
             {
-                return new Result { ErrorMessage = ex.Message };
+                return new Result {ErrorMessage = ex.Message};
             }
         }
     }

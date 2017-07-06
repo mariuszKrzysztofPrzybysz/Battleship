@@ -1,47 +1,45 @@
+using System.Data.Entity.Migrations;
+
 namespace BattleShip.Database.Migrations
 {
-    using System;
-    using System.Data.Entity.Migrations;
-    
     public partial class AddBattleEntity : DbMigration
     {
         public override void Up()
         {
             CreateTable(
-                "dbo.AccountRole",
-                c => new
+                    "dbo.AccountRole",
+                    c => new
                     {
-                        AccountRoleId = c.Long(nullable: false, identity: true),
-                        AccountId = c.Long(nullable: false),
-                        RoleId = c.Byte(nullable: false),
+                        AccountRoleId = c.Long(false, true),
+                        AccountId = c.Long(false),
+                        RoleId = c.Byte(false)
                     })
                 .PrimaryKey(t => t.AccountRoleId)
-                .ForeignKey("dbo.Account", t => t.AccountId, cascadeDelete: true)
-                .ForeignKey("dbo.Role", t => t.RoleId, cascadeDelete: true)
+                .ForeignKey("dbo.Account", t => t.AccountId, true)
+                .ForeignKey("dbo.Role", t => t.RoleId, true)
                 .Index(t => t.AccountId)
                 .Index(t => t.RoleId);
-            
+
             CreateTable(
-                "dbo.Battle",
-                c => new
+                    "dbo.Battle",
+                    c => new
                     {
-                        BattleId = c.Long(nullable: false, identity: true),
-                        PlayerId = c.Long(nullable: false),
-                        OpponentId = c.Long(nullable: false),
-                        StartUtcDateTime = c.DateTime(nullable: false),
+                        BattleId = c.Long(false, true),
+                        PlayerId = c.Long(false),
+                        OpponentId = c.Long(false),
+                        StartUtcDateTime = c.DateTime(false),
                         EndUtcDateTime = c.DateTime(),
-                        WinnerId = c.Long(),
+                        WinnerId = c.Long()
                     })
                 .PrimaryKey(t => t.BattleId);
-            
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.AccountRole", "RoleId", "dbo.Role");
             DropForeignKey("dbo.AccountRole", "AccountId", "dbo.Account");
-            DropIndex("dbo.AccountRole", new[] { "RoleId" });
-            DropIndex("dbo.AccountRole", new[] { "AccountId" });
+            DropIndex("dbo.AccountRole", new[] {"RoleId"});
+            DropIndex("dbo.AccountRole", new[] {"AccountId"});
             DropTable("dbo.Battle");
             DropTable("dbo.AccountRole");
         }

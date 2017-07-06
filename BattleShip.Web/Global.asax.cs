@@ -1,13 +1,12 @@
-﻿using System.Web.Mvc;
+﻿using System.Web;
+using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using BattleShip.Web.Infrastructure;
-using Castle.Windsor;
-using Castle.Windsor.Installer;
 
 namespace BattleShip.Web
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         private static void BoostratpContainer()
         {
@@ -28,7 +27,6 @@ namespace BattleShip.Web
 
         protected void Application_End()
         {
-
         }
     }
 }

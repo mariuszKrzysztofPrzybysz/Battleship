@@ -6,6 +6,12 @@ namespace BattleShip.Database.Entities
 {
     public class Role
     {
+        #region Navigation properties
+
+        public virtual ICollection<AccountRole> AccountRoles { get; set; }
+
+        #endregion
+
         #region Persisted fields
 
         [Key]
@@ -15,12 +21,6 @@ namespace BattleShip.Database.Entities
         [Required]
         [StringLength(25)]
         public string Name { get; set; }
-
-        #endregion
-
-        #region Navigation properties
-
-        public virtual ICollection<AccountRole> AccountRoles { get; set; }
 
         #endregion
     }

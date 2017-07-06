@@ -44,7 +44,7 @@ namespace BattleShip.Database.Entities
         public Gender Gender { get; set; }
 
         [Required]
-        public  bool AllowNewBattle { get; set; }
+        public bool AllowNewBattle { get; set; }
 
         [Required]
         public bool AllowPrivateChat { get; set; }

@@ -71,7 +71,7 @@ namespace BattleShip.Web.Controllers
 
             if (result.IsSuccess)
                 result.Data = UrlBuilder.GetUrl("Chat", "Index");
-            
+
             return Json(result, JsonRequestBehavior.AllowGet);
         }
     }

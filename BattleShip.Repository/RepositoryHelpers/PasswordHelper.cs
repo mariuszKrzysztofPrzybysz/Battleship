@@ -7,10 +7,10 @@ namespace BattleShip.Repository.RepositoryHelpers
     {
         public static string GetSha512CngPasswordHash(string password)
         {
-            byte[] data = Encoding.UTF8.GetBytes(password);
+            var data = Encoding.UTF8.GetBytes(password);
             byte[] hash;
 
-            using (SHA512Cng sha512Cng = new SHA512Cng())
+            using (var sha512Cng = new SHA512Cng())
             {
                 hash = sha512Cng.ComputeHash(data);
             }

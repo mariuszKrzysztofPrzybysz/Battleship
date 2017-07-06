@@ -1,17 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Web.UI.WebControls;
 using AutoMapper;
 using BattleShip.Database.Entities;
 using BattleShip.Repository.Interfaces;
-using BattleShip.Repository.ViewModels;
 using BattleShip.Web.Profiles;
 using BattleShip.Web.ViewModels;
 
 namespace BattleShip.Web.Controllers
 {
-
     public class PlayerController : Controller
     {
         private readonly IAccountRepository _accountRepository;
@@ -45,17 +41,6 @@ namespace BattleShip.Web.Controllers
                 return RedirectToAction("Index");
 
             var model = Mapper.Map<Account, ExtendedEditAccountViewModel>(account);
-
-            //var model = new ExtendedEditAccountViewModel()
-            //{
-            //    AccountId = account.AccountId,
-            //    FirstName = account.FirstName,
-            //    LastName = account.LastName,
-            //    EmailAddress = account.EmailAddress,
-            //    Photo = account.Photo,
-            //    AllowNewBattle = account.AllowNewBattle,
-            //    AllowPrivateChat = account.AllowPrivateChat
-            //};
 
             return View(model);
         }

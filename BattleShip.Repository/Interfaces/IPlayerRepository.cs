@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BattleShip.Database.Entities;
 using BattleShip.Repository.RepositoryHelpers;
 using BattleShip.Repository.ViewModels;
 

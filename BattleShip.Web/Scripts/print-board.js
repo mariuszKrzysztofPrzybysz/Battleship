@@ -1,7 +1,7 @@
-﻿printBoardForPlayer = function () {
+﻿printBoardForPlayer = function() {
     return printBoard(tdCellsForPlayer);
 };
-printBoardForOpponent = function () {
+printBoardForOpponent = function() {
     return printBoard(tdCellsForOpponent);
 };
 
@@ -21,7 +21,7 @@ printBoard = function(tdCells) {
         tr.append(`<td>${r}</td>`);
 
         for (let c = 1; c < columns.length; c++) {
-            tr.append(tdCells(columns[c],r));
+            tr.append(tdCells(columns[c], r));
         }
 
         tbody.append(tr);
@@ -34,6 +34,6 @@ tdCellsForPlayer = function(column, row) {
     return `<td class="cell" data-counter="0" data-cell="${column}-${row}"><button class="btn btn-info"></button></td>`;
 };
 
-tdCellsForOpponent = function (column, row) {
+tdCellsForOpponent = function(column, row) {
     return `<td class="cell" data-cell="${column}-${row}"><button class="btn btn-info"></button></td>`;
 };

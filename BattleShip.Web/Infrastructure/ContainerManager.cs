@@ -5,18 +5,16 @@ namespace BattleShip.Web.Infrastructure
 {
     public static class ContainerManager
     {
-        private static IWindsorContainer _container = null;
+        private static IWindsorContainer _container;
+
         public static IWindsorContainer Container
         {
             get
             {
                 if (_container == null)
-                {
                     _container = new WindsorContainer().Install(FromAssembly.This());
-                }
                 return _container;
             }
-
         }
     }
 }

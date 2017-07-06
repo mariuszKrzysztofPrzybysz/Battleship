@@ -1,7 +1,5 @@
 ﻿using System.Data.Entity;
-using System.Data.Entity.Core.Common.CommandTrees;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Security.Cryptography.X509Certificates;
 using BattleShip.Database.Entities;
 
 namespace BattleShip.Database
@@ -10,7 +8,6 @@ namespace BattleShip.Database
     {
         public BattleShipContext() : base("name=BattleShipConnection")
         {
-
         }
 
         public DbSet<Role> Roles { get; set; }

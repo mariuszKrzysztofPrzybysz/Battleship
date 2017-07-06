@@ -16,5 +16,4 @@ namespace BattleShip.Web.Infrastructure
                     .LifestyleTransient());
         }
     }
-
 }
