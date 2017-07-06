@@ -181,6 +181,7 @@
     <Compile Include="Infrastructure\ControllerInstaller.cs" />
     <Compile Include="Infrastructure\ServicesInstaller.cs" />
     <Compile Include="Infrastructure\WindsorControllerFactory.cs" />
+    <Compile Include="Profiles\PlayerProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\UrlBuilderService.cs" />
     <Compile Include="Startup.cs" />
