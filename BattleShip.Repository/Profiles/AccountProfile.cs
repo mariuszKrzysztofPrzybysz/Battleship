@@ -10,11 +10,16 @@ namespace BattleShip.Repository.Profiles
         public AccountProfile()
         {
             CreateMap<AddAccountViewModel, Account>()
-                .AfterMap((src, dest) => dest.Password = PasswordHelper.GetSha512CngPasswordHash(src.Password))
-                .AfterMap((src, dest) => dest.FirstName = src.FirstName ?? string.Empty)
-                .AfterMap((src, dest) => dest.LastName = src.LastName ?? string.Empty)
-                .AfterMap((src, dest) => dest.AllowPrivateChat = true)
-                .AfterMap((src, dest) => dest.AllowNewBattle = true);
+                .ForMember(dest => dest.Password,
+                    src => src.MapFrom(e => PasswordHelper.GetSha512CngPasswordHash(e.Password)))
+                .ForMember(dest => dest.FirstName,
+                    src => src.MapFrom(e => e.FirstName ?? string.Empty))
+                .ForMember(dest => dest.LastName,
+                    src => src.MapFrom(e => e.LastName ?? string.Empty))
+                .ForMember(dest => dest.AllowPrivateChat,
+                    src => src.MapFrom(e => true))
+                .ForMember(dest => dest.AllowNewBattle,
+                    src => src.MapFrom(e => true));
 
             CreateMap<EditAccountViewModel, Account>()
                 .ForMember(m => m.Photo, opt => opt.Ignore());
