@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Transactions;
+using AutoMapper;
 using BattleShip.Database;
 using BattleShip.Database.Entities;
 using BattleShip.Repository.Interfaces;
+using BattleShip.Repository.Profiles;
 using BattleShip.Repository.RepositoryHelpers;
 using BattleShip.Repository.ViewModels;
 
@@ -19,6 +14,11 @@ namespace BattleShip.Repository.InDatabase
     public class AccountInDatabaseRepository : IAccountRepository
     {
         private readonly BattleShipContext _context;
+
+        static AccountInDatabaseRepository()
+        {
+            Mapper.Initialize(cfg => cfg.AddProfile(new AccountProfile()));
+        }
 
         public AccountInDatabaseRepository(BattleShipContext context)
         {
@@ -47,20 +47,10 @@ namespace BattleShip.Repository.InDatabase
                                     $"i nie rozróżniamy wielkości liter. Chcesz podać inną nazwę?"
                             };
 
-                        var hashedPassword = PasswordHelper.GetSha512CngPasswordHash(viewModel.Password);
+                        
 
-                        var newAccount = new Account
-                        {
-                            Login = viewModel.Login,
-                            Password = hashedPassword,
-                            EmailAddress = viewModel.EmailAddress,
-                            FirstName = viewModel.FirstName ?? string.Empty,
-                            LastName = viewModel.LastName ?? string.Empty,
-                            Gender = viewModel.Gender,
-                            AllowNewBattle = true,
-                            AllowPrivateChat = true
-                        };
-
+                        var newAccount = Mapper.Map<AddAccountViewModel, Account>(viewModel);
+                        
                         _context.Accounts.Add(newAccount);
 
                         var numberOfAccountsWrittenToUnderlyingDatabase
@@ -144,11 +134,8 @@ namespace BattleShip.Repository.InDatabase
                 if (accountInDatabase == null)
                     return new Result {ErrorMessage = "Skontaktuj się z administratorem."};
 
-                accountInDatabase.EmailAddress = viewModel.EmailAddress;
-                accountInDatabase.FirstName = viewModel.FirstName;
-                accountInDatabase.LastName = viewModel.LastName;
-                accountInDatabase.AllowNewBattle = viewModel.AllowNewBattle;
-                accountInDatabase.AllowPrivateChat = viewModel.AllowPrivateChat;
+                Mapper.Map(viewModel, accountInDatabase);
+
                 if (viewModel.Photo != null)
                     accountInDatabase.Photo = viewModel.Photo;
 
