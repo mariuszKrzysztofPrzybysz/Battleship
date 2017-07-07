@@ -22,6 +22,11 @@ namespace BattleShip.Web
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/koBattles").Include(
+                "~/Scripts/Helpers/ajaxHelper.js",
+                "~/Scripts/ViewModels/battleViewModel.js"
+            ));
+
             bundles.Add(new StyleBundle("~/Content/chat").Include(
                 "~/Content/chat.css"
             ));
