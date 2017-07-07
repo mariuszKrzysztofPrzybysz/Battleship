@@ -1,11 +1,11 @@
-﻿printBoardForPlayer = function() {
+﻿printBoardForPlayer = function () {
     return printBoard(tdCellsForPlayer);
 };
-printBoardForOpponent = function() {
+printBoardForOpponent = function () {
     return printBoard(tdCellsForOpponent);
 };
 
-printBoard = function(tdCells) {
+printBoard = function (tdCells) {
     const columns = ["", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
     const tbody = $("<tbody/>");
@@ -30,10 +30,10 @@ printBoard = function(tdCells) {
     return tbody;
 };
 
-tdCellsForPlayer = function(column, row) {
+tdCellsForPlayer = function (column, row) {
     return `<td class="cell" data-counter="0" data-cell="${column}-${row}"><button class="btn btn-info"></button></td>`;
 };
 
-tdCellsForOpponent = function(column, row) {
+tdCellsForOpponent = function (column, row) {
     return `<td class="cell" data-cell="${column}-${row}"><button class="btn btn-info"></button></td>`;
 };
