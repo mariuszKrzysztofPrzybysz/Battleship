@@ -245,6 +245,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\chat.js" />
     <Content Include="Scripts\chatDimensions.js" />
+    <Content Include="Scripts\Helpers\ajaxHelper.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.js" />
@@ -265,6 +266,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\ViewModels\battleViewModel.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
