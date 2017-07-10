@@ -12,6 +12,10 @@
     }
 
     getAllBattles();
+
+    self.resumeBattle = function (battleId) {
+        return `${getUrlRoot()}/Battle/Play?battleId=${battleId}`;
+    }
 };
 
 ko.applyBindings(new BattleViewModel());

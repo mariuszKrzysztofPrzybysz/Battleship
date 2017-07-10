@@ -1,77 +1,61 @@
-﻿@model IEnumerable<BattleShip.Repository.ViewModels.PlayerBattlesViewModel>
+﻿@using BattleShip.Repository.InDatabase
+@model IEnumerable<BattleShip.Repository.ViewModels.PlayerBattlesViewModel>
 
 @{
     ViewBag.Title = "Battles";
     Layout = "~/Views/Shared/_PlayerLayout.cshtml";
 }
 
+@section scripts
+{
+    @Scripts.Render("~/bundles/koBattles")
+}
+
 <h2>Battles</h2>
 
 <table class="table table-striped table-hover">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.BattleId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Player)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Opponent)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.StartUtcDateTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Duration)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Winner)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BattleId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Player)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Opponent)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartUtcDateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duration)
-            </td>
-            <td>
-                @{
-                    if (item.Winner == string.Empty)
-                    {
-                        <span class="label label-info">Pending</span>
-                    }
-                    else if (item.Winner == User.Identity.Name)
-                    {
-                        <span class="label label-success">@User.Identity.Name</span>
-                    }
-                    else
-                    {
-                        <span class="label label-warning">@User.Identity.Name</span>
-                    }
-                }
-            </td>
-            <td>
-                @{
-                    if (item.Winner == string.Empty)
-                    {
-                        @Html.ActionLink("Resume battle", "Play", "Battle", new {battleId = item.BattleId}, new {@class = "btn btn-xs btn-info"})
-                    }
-                }
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.BattleId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Player)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Opponent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartUtcDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Winner)
+            </th>
+            <th>Action</th>
         </tr>
-    }
+    </thead>
+    <tbody data-bind="foreach: battles">
+        <tr>
+            <td data-bind="text: battleId"></td>
+            <td data-bind="text: player"></td>
+            <td data-bind="text: opponent"></td>
+            <td data-bind="text: startUtcDateTime"></td>
+            <td data-bind="text: duration"></td>
+            <td>
+                <span data-bind="if: winner">
+                    <span data-bind="if: winner==player">
+                        <span data-bind="text: winner" class="label label-success"></span>
+                    </span>
+                    <span data-bind="if: winner==opponent">
+                        <span data-bind="text: winner" class="label label-danger"></span>
+                    </span>
+                </span>
+            </td>
+            <td data-bind="ifnot: winner">
+            <a data-bind="attr: { 'href': $parent.resumeBattle(battleId)}" class="btn btn-xs btn-info">Resume battle</a>
+        </tr>
+    </tbody>
 </table>

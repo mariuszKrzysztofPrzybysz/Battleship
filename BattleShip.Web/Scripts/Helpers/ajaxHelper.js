@@ -1,4 +1,8 @@
-﻿function ajaxHelper(uri, method, data) {
+﻿var self = this;
+
+self.error = ko.observable();
+
+function ajaxHelper(uri, method, data) {
     self.error("");
     return $.ajax({
             type: method,

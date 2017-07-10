@@ -23,6 +23,8 @@ namespace BattleShip.Web
                 "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/koBattles").Include(
+                "~/Scripts/Helpers/getUrlRoot.js",
+                "~/Scripts/knockout-{version}.js",
                 "~/Scripts/Helpers/ajaxHelper.js",
                 "~/Scripts/ViewModels/battleViewModel.js"
             ));
