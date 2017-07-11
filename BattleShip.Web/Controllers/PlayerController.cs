@@ -83,14 +83,9 @@ namespace BattleShip.Web.Controllers
             return RedirectToAction("Index", "Player");
         }
 
-        [ActionName("Battles")]
-        public async Task<ActionResult> BattlesAsync()
+        public ActionResult Battles()
         {
-            var login = User.Identity.Name;
-
-            var battles = await _playerRepository.GetPlayerBattles(login);
-
-            return View(battles);
+            return View();
         }
     }
 }
